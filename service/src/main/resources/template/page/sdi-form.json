@@ -1,0 +1,137 @@
+{
+  "title": "Форма",
+  "route": "/sdi-form",
+  "layout": {
+    "name": "layout-simple",
+    "blocks": [
+      {
+        "name": "main",
+        "components": [
+          {
+            "selector": "sdi-form",
+            "name": "VDKEditAdminForm",
+            "actions": [
+              {
+                "name": "back",
+                "title": "Закрыть",
+                "appearance": "outline",
+                "icon": "tuiIconCloseLarge"
+              },
+              {
+                "name": "submit",
+                "title": "Сохранить",
+                "appearance": "primary",
+                "icon": "tuiIconCheckLarge",
+                "validate": true,
+                "postAction": {
+                  "componentName": "VDKEditAdminForm",
+                  "name": "back"
+                }
+              },
+              {
+                "name": "save",
+                "api": {
+                  "url": "/api/v6/admin/{id}/edit",
+                  "method": "POST"
+                }
+              }
+            ],
+            "api": {
+              "method": "GET",
+              "url": "/api/v6/admin"
+            },
+            "fields": [
+              {
+                "name": "fullName",
+                "title": "ФИО",
+                "type": "string",
+                "validators": [
+                  {
+                    "type": "required"
+                  }
+                ]
+              },
+              {
+                "name": "login",
+                "title": "Логин",
+                "type": "string",
+                "validators": [
+                  {
+                    "type": "required"
+                  }
+                ]
+              },
+              {
+                "name": "email",
+                "title": "E-mail",
+                "type": "email",
+                "validators": [
+                  {
+                    "type": "required"
+                  }
+                ]
+              },
+              {
+                "name": "roleId",
+                "title": "Роль",
+                "type": "select",
+                "api": {
+                  "url": "/api/v6/admin/access/role",
+                  "method": "GET"
+                },
+                "validators": [
+                  {
+                    "type": "required"
+                  }
+                ]
+              },
+              {
+                "name": "activeFlag",
+                "title": "Активный",
+                "type": "boolean",
+                "isHidden": true
+              },
+              {
+                "name": "phone",
+                "title": "Телефон",
+                "type": "phone"
+              },
+              {
+                "name": "division",
+                "title": "Подразделение",
+                "type": "select",
+                "options": [
+                  {
+                    "id": "Филиал \"Единый расчетный центр\"",
+                    "name": "Филиал \"Единый расчетный центр\""
+                  },
+                  {
+                    "id": "Метрологический центр",
+                    "name": "Метрологический центр"
+                  },
+                  {
+                    "id": "Филиал \"Водоснабжение Санкт-Петербурга\"",
+                    "name": "Филиал \"Водоснабжение Санкт-Петербурга\""
+                  },
+                  {
+                    "id": "Филиал \"Водоотведение Санкт-Петербурга\"",
+                    "name": "Филиал \"Водоотведение Санкт-Петербурга\""
+                  },
+                  {
+                    "id": "Дирекция подключений и обработки данных об абонентах",
+                    "name": "Дирекция подключений и обработки данных об абонентах"
+                  },
+                  {
+                    "id": "Филиал \"Транспорт и логистика\"",
+                    "name": "Филиал \"Транспорт и логистика\""
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "dataSources": []
+}

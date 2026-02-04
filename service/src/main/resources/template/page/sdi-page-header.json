@@ -1,0 +1,36 @@
+{
+  "title": "Залоговок",
+  "route": "/sdi-page-header",
+  "layout": {
+    "name": "layout-simple",
+    "blocks": [
+      {
+        "name": "main",
+        "components": [
+          {
+            "selector": "sdi-page-header",
+            "title": "Клиенты",
+            "actions": [
+              {
+                "title": "Добавить клиента",
+                "icon": "tuiIconPlusCircleLarge",
+                "route": {
+                  "url": "/clients/create"
+                },
+                "componentName": "addClient"
+              }
+            ],
+            "hiddenActions": [
+              {
+                "name": "download",
+                "title": "Скачать",
+                "icon": "tuiIconDownloadLarge",
+                "componentName": "UsersTable"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

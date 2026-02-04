@@ -1,0 +1,155 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ APP_NAME }}-secret
+  namespace: {{ NAMESPACE }}
+stringData:
+  SPRING_DATASOURCE_URL: "{{ SPRING_DATASOURCE_URL }}"
+  SPRING_DATASOURCE_USERNAME: "{{ SPRING_DATASOURCE_USERNAME }}"
+  SPRING_DATASOURCE_PASSWORD: "{{ SPRING_DATASOURCE_PASSWORD }}"
+  SPRING_JPA_HIBERNATE_DDL_AUTO: "{{ SPRING_JPA_HIBERNATE_DDL_AUTO }}"
+  SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWT-SET-URI: "{{ SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWT_SET_URI }}"
+  KEYCLOAK_AUTH-SERVER-URL: "{{ KEYCLOAK_AUTH_SERVER_URL }}"
+  KEYCLOAK_REALM: "{{ KEYCLOAK_REALM }}"
+  KEYCLOAK_RESOURSE: "{{ KEYCLOAK_RESOURSE }}"
+  KEYCLOAK_PUBLIC-CLIENT: "{{ KEYCLOAK_PUBLIC_CLIENT }}"
+  KEYCLOAK_JWK: "{{ KEYCLOAK_JWK }}"
+  KEYCLOAK_AUTH: "{{ KEYCLOAK_AUTH }}"
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: {{ NAMESPACE }}
+  name: {{ APP_NAME }}
+  labels:
+    app: {{ APP_NAME }}
+    name: {{ APP_NAME }}
+spec:
+  replicas: {{ replicas_count }}
+  selector:
+    matchLabels:
+      deployment: {{ APP_NAME }}
+  strategy:
+    rollingParams:
+      maxSurge: 50%
+      maxUnavailable: 50%
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      annotations:
+        app.kubernetes.io/name: {{ APP_NAME }}
+        prometheus.io/scrape: 'true'
+      labels:
+        app: {{ APP_NAME }}
+        deployment: {{ APP_NAME }}
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: group
+                operator: In
+                values:
+                - app
+      imagePullSecrets:
+        - name: docker-registry-pull-secret
+      securityContext: {}
+      serviceAccountName: {{ SA }}
+      containers:
+        - name: {{ APP_NAME }}
+          image: {{ IMAGE_REGISTRY }}/{{ IMAGE_NAME }}:{{ IMAGE_TAG }}
+          imagePullPolicy: Always
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: LOG_LEVEL
+              value: {{ LOG_LEVEL }}
+            - name: TZ
+              value: '{{ TZ }}'
+{% if HEAP_DUMP_ENABLE %}
+            - name: JAVA_OPTS
+              value: '{{ JAVA_OPTS }} -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/tmp/heap_dumps/$(POD_NAME)_$START_TIME.hprof'
+{% else %}
+            - name: JAVA_OPTS
+              value: '{{ JAVA_OPTS }}'
+{% endif %}
+          envFrom:
+            - configMapRef:
+                name: {{ APP_NAME }}-config
+            - secretRef:
+                name: {{ APP_NAME }}-secret
+{% if HEAP_DUMP_ENABLE %}
+          volumeMounts:
+            - name: heap-dumps
+              mountPath: /tmp/heap_dumps
+{% endif %}
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          resources:
+            limits:
+              cpu: {{ CPU_LIMIT }}
+              memory: {{ MEMORY_LIMIT }}
+            requests:
+              cpu: {{ CPU_REQUEST }}
+              memory: {{ MEMORY_REQUEST }}
+{% if HEAP_DUMP_ENABLE %}
+      volumes:
+        - name: heap-dumps
+          emptyDir: {}
+{% endif %}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: {{ APP_NAME }}
+  name: {{ APP_NAME }}
+  namespace: {{ NAMESPACE }}
+spec:
+  ports:
+    - name: 8080-tcp
+      port: 80
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    deployment: {{ APP_NAME }}
+  sessionAffinity: None
+  type: ClusterIP
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  labels:
+    app: {{ APP_NAME }}
+  name: {{ APP_NAME }}
+  namespace: {{ NAMESPACE }}
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: {{ APP_NAME }}.{{ NAMESPACE }}.{{ ROUTER_PREFIX }}
+      http:
+        paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: {{ APP_NAME }}
+              port:
+                number: 8080
+  tls:
+    - hosts:
+        - {{ APP_NAME }}.{{ NAMESPACE }}.{{ ROUTER_PREFIX }}
+      secretName: {{ NAMESPACE }}-cert-tls

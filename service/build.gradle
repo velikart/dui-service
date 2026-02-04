@@ -1,0 +1,44 @@
+plugins {
+    id 'ru.axenix.smartax.plugin.service-configurator-plugin' version "${CONFIGURATOR_PLUGIN_VERSION}"
+    id 'ru.axenix.smartax.plugin.liquibase-helper' version "${LIQUIBASE_HELPER_VERSION}"
+}
+
+dependencies {
+    implementation project(':dui-service-integration')
+
+    implementation 'ru.axenix.smartax.auth-common:auth-common'
+    implementation 'ru.axenix.smartax.auth-common:user-client'
+    implementation 'ru.axenix.smartax.kafka-starter:group'
+    implementation 'ru.axenix.smartax.logging-lib:logging-lib-core'
+    implementation 'ru.axenix.smartax.service-web:service-web'
+    implementation 'ru.axenix.smartax.util:util'
+
+    implementation 'org.apache.commons:commons-lang3'
+    implementation 'org.liquibase:liquibase-core'
+    implementation 'org.mapstruct:mapstruct'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'net.minidev:json-smart:2.4.9'
+    implementation 'org.mapstruct:mapstruct'
+
+    runtimeOnly 'org.postgresql:postgresql'
+
+    compileOnly 'org.projectlombok:lombok'
+
+    annotationProcessor 'org.projectlombok:lombok'
+    annotationProcessor 'org.mapstruct:mapstruct-processor'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+    testImplementation 'ru.axenix.smartax.test-commons:test-commons'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'io.zonky.test:embedded-database-spring-test'
+    testImplementation 'io.zonky.test:embedded-postgres'
+
+}
+
+
+

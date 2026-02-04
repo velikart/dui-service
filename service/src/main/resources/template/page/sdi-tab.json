@@ -1,0 +1,39 @@
+{
+  "title": "Вкладки",
+  "route": "/sdi-tab",
+  "layout": {
+    "name": "layout-simple",
+    "blocks": [
+      {
+        "name": "main",
+        "components": [
+          {
+            "selector": "sdi-tab",
+            "tabs": [
+              {
+                "name": "tab1",
+                "title": "Клиенты"
+              },
+              {
+                "name": "tab2",
+                "title": "Сотрудники"
+              },
+              {
+                "name": "tab3",
+                "title": "Платежи"
+              },
+              {
+                "name": "tab4",
+                "title": "Показания"
+              },
+              {
+                "name": "tab5",
+                "title": "Документы"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

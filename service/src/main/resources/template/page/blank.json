@@ -1,0 +1,13 @@
+{
+  "title": "Пустая страница",
+  "route": "/blank",
+  "layout": {
+    "name": "layout-simple",
+    "blocks": [
+      {
+        "name": "main",
+        "components": []
+      }
+    ]
+  }
+}

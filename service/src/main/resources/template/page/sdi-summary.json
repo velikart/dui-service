@@ -1,0 +1,46 @@
+{
+  "title": "Статический отчёт",
+  "route": "/sdi-summary",
+  "layout": {
+    "name": "layout-simple",
+    "blocks": [
+      {
+        "name": "main",
+        "components": [
+          {
+            "selector": "sdi-summary",
+            "api": {
+              "url": "/api/v1/summary",
+              "method": "POST"
+            },
+            "columns": {
+              "total": {
+                "title": "Всего пользователей",
+                "type": "number"
+              },
+              "items": [
+                {
+                  "title": "Активные",
+                  "type": "number"
+                },
+                {
+                  "title": "Подтвердили e-mail",
+                  "type": "number"
+                },
+                {
+                  "title": "Удалённые",
+                  "type": "number"
+                },
+                {
+                  "title": "Заполнили весь профиль",
+                  "type": "number"
+                }
+              ]
+            },
+            "loader": "circle"
+          }
+        ]
+      }
+    ]
+  }
+}

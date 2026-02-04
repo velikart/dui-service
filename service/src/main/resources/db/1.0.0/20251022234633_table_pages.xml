@@ -1,0 +1,26 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="20251022234633_table_pages.xml" author="sergey.dresvyanin@axenix.pro"
+               runAlways="false">
+        <sql>
+            CREATE TABLE dui_service.page
+            (
+            id uuid PRIMARY KEY,
+            title VARCHAR(255) NOT NULL,
+            name VARCHAR(255) NOT NULL UNIQUE,
+            author VARCHAR(255),
+            instructions JSONB NOT NULL,
+            update_date_time timestamp(0) NOT NULL DEFAULT NOW()
+            );
+        </sql>
+        <rollback>
+            <sql>
+                DROP TABLE dui_service.page;
+            </sql>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

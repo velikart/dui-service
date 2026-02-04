@@ -1,0 +1,1201 @@
+{
+  "title": "Страница создания степпером",
+  "route": "/stepper",
+  "dataSources": [
+    {
+      "name": "notification-create-ds"
+    }
+  ],
+  "layout": {
+    "name": "layout-simple",
+    "blocks": [
+      {
+        "name": "main",
+        "components": [
+          {
+            "selector": "sdi-page-header",
+            "showBack": true,
+            "title": "Новое уведомление"
+          },
+          {
+            "selector": "sdi-stepper",
+            "name": "MeSteps",
+            "dataInterface": {
+              "input": {
+                "url": "ds://notification-create-ds",
+                "method": "GET"
+              },
+              "output": {
+                "url": "ds://notification-create-ds",
+                "method": "POST"
+              }
+            },
+            "actions": [
+              {
+                "name": "save",
+                "api": {
+                  "url": "/api/v2/notifications",
+                  "method": "POST"
+                },
+                "postAction": {
+                  "route": {
+                    "url": "/sdi-notifications"
+                  }
+                }
+              }
+            ],
+            "steps": [
+              {
+                "name": "notificationType",
+                "title": "Вид уведомления",
+                "components": [
+                  {
+                    "selector": "sdi-form",
+                    "dataInterface": {
+                      "output": {
+                        "url": "ds://notification-create-ds/notificationType",
+                        "method": "POST"
+                      }
+                    },
+                    "actions": [
+                      {
+                        "name": "next",
+                        "title": "Далее",
+                        "validate": true,
+                        "componentName": "MeSteps"
+                      }
+                    ],
+                    "fields": [
+                      {
+                        "name": "name",
+                        "title": "Название рассылки",
+                        "type": "string",
+                        "validators": [
+                          {
+                            "type": "required"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "channel",
+                        "title": "Вид уведомления",
+                        "type": "select",
+                        "options": [
+                          {
+                            "id": "EMAIL",
+                            "name": "E-mail"
+                          },
+                          {
+                            "id": "IN_APP",
+                            "name": "Внутри системы"
+                          }
+                        ],
+                        "validators": [
+                          {
+                            "type": "required"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "subChannel",
+                        "title": "Подвид",
+                        "type": "select",
+                        "isHidden": true,
+                        "isDisabled": true,
+                        "options": [
+                          {
+                            "id": "BELL",
+                            "name": "Колокольчик"
+                          },
+                          {
+                            "id": "MODAL",
+                            "name": "Модальное окно"
+                          },
+                          {
+                            "id": "TOP",
+                            "name": "Уведомление в топе"
+                          }
+                        ],
+                        "effects": [
+                          {
+                            "condition": {
+                              "operator": "AND",
+                              "predicates": [
+                                {
+                                  "property": "channel",
+                                  "operator": "EQUAL",
+                                  "value": "IN_APP"
+                                }
+                              ]
+                            },
+                            "aftermath": {
+                              "isHidden": false,
+                              "isDisabled": false
+                            }
+                          }
+                        ],
+                        "validators": [
+                          {
+                            "type": "required"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "pushFlag",
+                        "title": "Дублировать push-уведомлением",
+                        "type": "boolean"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "name": "notificationBody",
+                "title": "Настройки контента",
+                "components": [
+                  {
+                    "selector": "sdi-form",
+                    "dataInterface": {
+                      "output": {
+                        "url": "ds://notification-create-ds/notificationBody",
+                        "method": "POST"
+                      }
+                    },
+                    "fileApi": {
+                      "get": {
+                        "url": "/api/v1/file",
+                        "method": "GET"
+                      },
+                      "post": {
+                        "url": "/api/v1/file",
+                        "method": "POST"
+                      }
+                    },
+                    "actions": [
+                      {
+                        "name": "prev",
+                        "title": "Назад",
+                        "appearance": "outline",
+                        "componentName": "MeSteps"
+                      },
+                      {
+                        "name": "next",
+                        "title": "Далее",
+                        "validate": true,
+                        "componentName": "MeSteps"
+                      }
+                    ],
+                    "fields": [
+                      {
+                        "name": "topic",
+                        "title": "Тема",
+                        "type": "string",
+                        "validators": [
+                          {
+                            "type": "required"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "body",
+                        "type": "editor",
+                        "validators": [
+                          {
+                            "type": "required"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "image",
+                        "title": "Рекомендованный размер: 500х150 пикселей, соотношение сторон: 10:3",
+                        "type": "image",
+                        "isHidden": true,
+                        "isDisabled": true,
+                        "effects": [
+                          {
+                            "root": "ds://notification-create-ds",
+                            "condition": {
+                              "operator": "AND",
+                              "predicates": [
+                                {
+                                  "property": "notificationType.channel",
+                                  "operator": "EQUAL",
+                                  "value": "IN_APP"
+                                },
+                                {
+                                  "property": "notificationType.subChannel",
+                                  "operator": "EQUAL",
+                                  "value": "MODAL"
+                                }
+                              ]
+                            },
+                            "aftermath": {
+                              "isHidden": false,
+                              "isDisabled": false
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "name": "linkStatus",
+                        "title": "Переход",
+                        "type": "select",
+                        "options": [
+                          {
+                            "id": "NO_LINK",
+                            "name": "Без перехода"
+                          },
+                          {
+                            "id": "LINK",
+                            "name": "Ссылка"
+                          }
+                        ],
+                        "isHidden": true,
+                        "isDisabled": true,
+                        "effects": [
+                          {
+                            "root": "ds://notification-create-ds",
+                            "condition": {
+                              "operator": "AND",
+                              "predicates": [
+                                {
+                                  "property": "notificationType.channel",
+                                  "operator": "EQUAL",
+                                  "value": "IN_APP"
+                                },
+                                {
+                                  "property": "notificationType.subChannel",
+                                  "operator": "NOT_EQUAL",
+                                  "value": "TOP"
+                                }
+                              ]
+                            },
+                            "aftermath": {
+                              "isHidden": false,
+                              "isDisabled": false
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "name": "linkAddress",
+                        "title": "Адрес ссылки",
+                        "type": "string",
+                        "isHidden": true,
+                        "isDisabled": true,
+                        "validators": [
+                          {
+                            "type": "required"
+                          }
+                        ],
+                        "effects": [
+                          {
+                            "root": "ds://notification-create-ds",
+                            "condition": {
+                              "operator": "AND",
+                              "predicates": [
+                                {
+                                  "property": "notificationBody.linkStatus",
+                                  "operator": "EQUAL",
+                                  "value": "LINK"
+                                },
+                                {
+                                  "property": "notificationType.subChannel",
+                                  "operator": "NOT_EQUAL",
+                                  "value": "TOP"
+                                }
+                              ]
+                            },
+                            "aftermath": {
+                              "isHidden": false,
+                              "isDisabled": false
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "name": "linkText",
+                        "title": "Текст кнопки перехода",
+                        "type": "string",
+                        "isHidden": true,
+                        "isDisabled": true,
+                        "validators": [
+                          {
+                            "type": "required"
+                          }
+                        ],
+                        "effects": [
+                          {
+                            "root": "ds://notification-create-ds",
+                            "condition": {
+                              "operator": "AND",
+                              "predicates": [
+                                {
+                                  "property": "notificationBody.linkStatus",
+                                  "operator": "EQUAL",
+                                  "value": "LINK"
+                                },
+                                {
+                                  "property": "notificationType.subChannel",
+                                  "operator": "NOT_EQUAL",
+                                  "value": "TOP"
+                                }
+                              ]
+                            },
+                            "aftermath": {
+                              "isHidden": false,
+                              "isDisabled": false
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "name": "confirmation",
+                        "title": "Подтверждение",
+                        "type": "select",
+                        "isHidden": true,
+                        "isDisabled": true,
+                        "options": [
+                          {
+                            "id": "NO",
+                            "name": "Не требуется"
+                          },
+                          {
+                            "id": "BUTTON",
+                            "name": "При нажатии на кнопку подтверждения"
+                          },
+                          {
+                            "id": "BUTTON_TRANSITION",
+                            "name": "При нажатии на кнопку перехода"
+                          }
+                        ],
+                        "effects": [
+                          {
+                            "root": "ds://notification-create-ds",
+                            "condition": {
+                              "operator": "AND",
+                              "predicates": [
+                                {
+                                  "property": "notificationBody.linkStatus",
+                                  "operator": "EQUAL",
+                                  "value": "LINK"
+                                },
+                                {
+                                  "property": "notificationType.subChannel",
+                                  "operator": "EQUAL",
+                                  "value": "BELL"
+                                }
+                              ]
+                            },
+                            "aftermath": {
+                              "isHidden": false,
+                              "isDisabled": false
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "name": "confirmationLink",
+                        "title": "Подтверждение",
+                        "type": "select",
+                        "isHidden": true,
+                        "isDisabled": true,
+                        "options": [
+                          {
+                            "id": "BUTTON",
+                            "name": "При нажатии на кнопку подтверждения"
+                          },
+                          {
+                            "id": "BUTTON_TRANSITION",
+                            "name": "При нажатии на кнопку перехода"
+                          }
+                        ],
+                        "effects": [
+                          {
+                            "root": "ds://notification-create-ds",
+                            "condition": {
+                              "operator": "AND",
+                              "predicates": [
+                                {
+                                  "property": "notificationBody.linkStatus",
+                                  "operator": "EQUAL",
+                                  "value": "LINK"
+                                },
+                                {
+                                  "property": "notificationType.subChannel",
+                                  "operator": "EQUAL",
+                                  "value": "MODAL"
+                                }
+                              ]
+                            },
+                            "aftermath": {
+                              "isHidden": false,
+                              "isDisabled": false
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "name": "confirmationNoLink",
+                        "title": "Подтверждение",
+                        "type": "select",
+                        "isHidden": true,
+                        "isDisabled": true,
+                        "options": [
+                          {
+                            "id": "NO",
+                            "name": "Не требуется"
+                          },
+                          {
+                            "id": "BUTTON",
+                            "name": "При нажатии на кнопку подтверждения"
+                          }
+                        ],
+                        "effects": [
+                          {
+                            "root": "ds://notification-create-ds",
+                            "condition": {
+                              "operator": "AND",
+                              "predicates": [
+                                {
+                                  "property": "notificationBody.linkStatus",
+                                  "operator": "EQUAL",
+                                  "value": "NO_LINK"
+                                },
+                                {
+                                  "property": "notificationType.subChannel",
+                                  "operator": "EQUAL",
+                                  "value": "BELL"
+                                }
+                              ]
+                            },
+                            "aftermath": {
+                              "isHidden": false,
+                              "isDisabled": false
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "name": "confirmationButtonText",
+                        "title": "Текст кнопки подтверждения",
+                        "type": "string",
+                        "isDisabled": true,
+                        "isHidden": true,
+                        "validators": [
+                          {
+                            "type": "required"
+                          }
+                        ],
+                        "effects": [
+                          {
+                            "root": "ds://notification-create-ds",
+                            "condition": {
+                              "operator": "OR",
+                              "predicates": [
+                                {
+                                  "property": "notificationBody.confirmationNoLink",
+                                  "operator": "EQUAL",
+                                  "value": "BUTTON"
+                                },
+                                {
+                                  "property": "notificationBody.confirmation",
+                                  "operator": "EQUAL",
+                                  "value": "BUTTON"
+                                },
+                                {
+                                  "property": "notificationBody.confirmationLink",
+                                  "operator": "EQUAL",
+                                  "value": "BUTTON"
+                                },
+                                {
+                                  "operator": "AND",
+                                  "predicates": [
+                                    {
+                                      "property": "notificationType.subChannel",
+                                      "operator": "EQUAL",
+                                      "value": "MODAL"
+                                    },
+                                    {
+                                      "property": "notificationBody.linkStatus",
+                                      "operator": "EQUAL",
+                                      "value": "NO_LINK"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            "aftermath": {
+                              "isHidden": false,
+                              "isDisabled": false
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "name": "notificationRecipients",
+                "title": "Получатели",
+                "components": [
+                  {
+                    "selector": "sdi-form",
+                    "dataInterface": {
+                      "output": {
+                        "url": "ds://notification-create-ds/notificationRecipients",
+                        "method": "POST"
+                      }
+                    },
+                    "fileApi": {
+                      "get": {
+                        "url": "/api/v1/file",
+                        "method": "GET"
+                      },
+                      "post": {
+                        "url": "/api/v1/file",
+                        "method": "POST"
+                      }
+                    },
+                    "actions": [
+                      {
+                        "name": "prev",
+                        "title": "Назад",
+                        "appearance": "outline",
+                        "componentName": "MeSteps"
+                      },
+                      {
+                        "name": "next",
+                        "title": "Далее",
+                        "validate": true,
+                        "componentName": "MeSteps"
+                      }
+                    ],
+                    "fields": [
+                      {
+                        "name": "allRecipients",
+                        "title": "Отправить всем клиентам компании",
+                        "type": "boolean"
+                      },
+                      {
+                        "name": "rule",
+                        "title": "Правило списка",
+                        "type": "select",
+                        "options": [
+                          {
+                            "id": "INCLUDE",
+                            "name": "По списку"
+                          },
+                          {
+                            "id": "EXCLUDE",
+                            "name": "Добавить исключения"
+                          }
+                        ],
+                        "validators": [
+                          {
+                            "type": "required"
+                          }
+                        ],
+                        "effects": [
+                          {
+                            "condition": {
+                              "operator": "AND",
+                              "predicates": [
+                                {
+                                  "property": "allRecipients",
+                                  "operator": "EQUAL",
+                                  "value": true
+                                }
+                              ]
+                            },
+                            "aftermath": {
+                              "isHidden": true,
+                              "isDisabled": true
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "name": "listType",
+                        "title": "Вид списка получателей",
+                        "type": "select",
+                        "options": [
+                          {
+                            "id": "PHONE",
+                            "name": "Номера телефонов"
+                          },
+                          {
+                            "id": "EMAIL",
+                            "name": "Адреса e-mail"
+                          },
+                          {
+                            "id": "ACCOUNT",
+                            "name": "Номера договоров/ЛС"
+                          }
+                        ],
+                        "validators": [
+                          {
+                            "type": "required"
+                          }
+                        ],
+                        "effects": [
+                          {
+                            "condition": {
+                              "operator": "AND",
+                              "predicates": [
+                                {
+                                  "property": "allRecipients",
+                                  "operator": "EQUAL",
+                                  "value": true
+                                }
+                              ]
+                            },
+                            "aftermath": {
+                              "isHidden": true,
+                              "isDisabled": true
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "name": "uploadFileFlag",
+                        "title": "Загрузить из файла",
+                        "type": "boolean",
+                        "effects": [
+                          {
+                            "condition": {
+                              "operator": "AND",
+                              "predicates": [
+                                {
+                                  "property": "allRecipients",
+                                  "operator": "EQUAL",
+                                  "value": true
+                                }
+                              ]
+                            },
+                            "aftermath": {
+                              "isHidden": true,
+                              "isDisabled": true
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "name": "file",
+                        "link": "Выберите файл Excel",
+                        "label": "или перетащите его сюда",
+                        "accept": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                        "type": "file",
+                        "isHidden": true,
+                        "isDisabled": true,
+                        "effects": [
+                          {
+                            "condition": {
+                              "operator": "AND",
+                              "predicates": [
+                                {
+                                  "property": "uploadFileFlag",
+                                  "operator": "EQUAL",
+                                  "value": true
+                                },
+                                {
+                                  "property": "allRecipients",
+                                  "operator": "EQUAL",
+                                  "value": false
+                                }
+                              ]
+                            },
+                            "aftermath": {
+                              "isHidden": false,
+                              "isDisabled": false
+                            }
+                          }
+                        ],
+                        "validators": [
+                          {
+                            "type": "required"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "list",
+                        "title": "Ввести вручную",
+                        "type": "textarea",
+                        "isHidden": false,
+                        "isDisabled": false,
+                        "effects": [
+                          {
+                            "condition": {
+                              "operator": "OR",
+                              "predicates": [
+                                {
+                                  "property": "uploadFileFlag",
+                                  "operator": "EQUAL",
+                                  "value": true
+                                },
+                                {
+                                  "property": "allRecipients",
+                                  "operator": "EQUAL",
+                                  "value": true
+                                }
+                              ]
+                            },
+                            "aftermath": {
+                              "isHidden": true,
+                              "isDisabled": true
+                            }
+                          }
+                        ],
+                        "validators": [
+                          {
+                            "type": "required"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "name": "notificationDatePeriod",
+                "title": "Период отображения",
+                "components": [
+                  {
+                    "selector": "sdi-form",
+                    "actions": [
+                      {
+                        "name": "prev",
+                        "title": "Назад",
+                        "appearance": "outline",
+                        "componentName": "MeSteps"
+                      },
+                      {
+                        "name": "next",
+                        "title": "Далее",
+                        "validate": true,
+                        "componentName": "MeSteps"
+                      }
+                    ],
+                    "fields": [
+                      {
+                        "name": "noTime",
+                        "title": "Бессрочное",
+                        "type": "boolean"
+                      },
+                      {
+                        "name": "dateFrom",
+                        "title": "Начало показа",
+                        "type": "datetime",
+                        "isHidden": false,
+                        "isDisabled": false,
+                        "effects": [
+                          {
+                            "condition": {
+                              "operator": "AND",
+                              "predicates": [
+                                {
+                                  "property": "noTime",
+                                  "operator": "EQUAL",
+                                  "value": true
+                                }
+                              ]
+                            },
+                            "aftermath": {
+                              "isHidden": true,
+                              "isDisabled": true
+                            }
+                          }
+                        ],
+                        "validators": [
+                          {
+                            "type": "required"
+                          }
+                        ]
+                      },
+                      {
+                        "name": "dateTo",
+                        "title": "Конец показа",
+                        "type": "datetime",
+                        "isHidden": false,
+                        "isDisabled": false,
+                        "effects": [
+                          {
+                            "condition": {
+                              "operator": "AND",
+                              "predicates": [
+                                {
+                                  "property": "noTime",
+                                  "operator": "EQUAL",
+                                  "value": true
+                                }
+                              ]
+                            },
+                            "aftermath": {
+                              "isHidden": true,
+                              "isDisabled": true
+                            }
+                          }
+                        ],
+                        "validators": [
+                          {
+                            "type": "required"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "name": "notificationCheck",
+                "title": "Проверка",
+                "fileApi": {
+                  "get": {
+                    "url": "/api/v1/file",
+                    "method": "GET"
+                  }
+                },
+                "components": [
+                  {
+                    "selector": "sdi-content",
+                    "title": "Вид уведомления"
+                  },
+                  {
+                    "selector": "sdi-vertical-table",
+                    "dataInterface": {
+                      "input": {
+                        "url": "ds://notification-create-ds/notificationType",
+                        "method": "GET"
+                      }
+                    },
+                    "hideNoValueColumn": true,
+                    "columns": [
+                      {
+                        "name": "name",
+                        "title": "Название рассылки",
+                        "type": "string"
+                      },
+                      {
+                        "name": "channel",
+                        "title": "Вид уведомления",
+                        "type": "select"
+                      },
+                      {
+                        "name": "subChannel",
+                        "title": "Подвид",
+                        "type": "select"
+                      },
+                      {
+                        "name": "pushFlag",
+                        "title": "Дублировать push-уведомлением",
+                        "type": "boolean"
+                      }
+                    ]
+                  },
+                  {
+                    "selector": "sdi-content",
+                    "title": "Настройки контента"
+                  },
+                  {
+                    "selector": "sdi-vertical-table",
+                    "dataInterface": {
+                      "input": {
+                        "url": "ds://notification-create-ds/notificationBody",
+                        "method": "GET"
+                      }
+                    },
+                    "hideNoValueColumn": true,
+                    "columns": [
+                      {
+                        "name": "topic",
+                        "title": "Тема",
+                        "type": "string"
+                      },
+                      {
+                        "name": "body",
+                        "title": "Текст уведомления",
+                        "type": "html"
+                      },
+                      {
+                        "name": "link",
+                        "title": "Переход",
+                        "type": "select"
+                      },
+                      {
+                        "name": "linkAddress",
+                        "title": "Адрес ссылки",
+                        "type": "string"
+                      },
+                      {
+                        "name": "linkText",
+                        "title": "Текст кнопки перехода",
+                        "type": "string",
+                        "effects": [
+                          {
+                            "root": "ds://notification-create-ds/notificationBody",
+                            "condition": {
+                              "operator": "AND",
+                              "predicates": [
+                                {
+                                  "property": "link",
+                                  "operator": "EQUAL",
+                                  "value": "LINK"
+                                }
+                              ]
+                            },
+                            "aftermath": {
+                              "isHidden": false,
+                              "isDisabled": false
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "name": "confirmation",
+                        "title": "Подтверждение",
+                        "type": "select",
+                        "effects": [
+                          {
+                            "root": "ds://notification-create-ds/notificationBody",
+                            "condition": {
+                              "operator": "AND",
+                              "predicates": [
+                                {
+                                  "property": "link",
+                                  "operator": "EQUAL",
+                                  "value": "NO_LINK"
+                                }
+                              ]
+                            },
+                            "aftermath": {
+                              "isHidden": false,
+                              "isDisabled": false
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "name": "confirmationLink",
+                        "title": "Подтверждение",
+                        "type": "select",
+                        "effects": [
+                          {
+                            "root": "ds://notification-create-ds/notificationBody",
+                            "condition": {
+                              "operator": "AND",
+                              "predicates": [
+                                {
+                                  "property": "link",
+                                  "operator": "EQUAL",
+                                  "value": "LINK"
+                                }
+                              ]
+                            },
+                            "aftermath": {
+                              "isHidden": false,
+                              "isDisabled": false
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "name": "confirmationButtonText",
+                        "title": "Текст кнопки подтверждения",
+                        "type": "string",
+                        "effects": [
+                          {
+                            "root": "ds://notification-create-ds/notificationBody",
+                            "condition": {
+                              "operator": "OR",
+                              "predicates": [
+                                {
+                                  "property": "confirmation",
+                                  "operator": "EQUAL",
+                                  "value": "BUTTON"
+                                },
+                                {
+                                  "property": "confirmationLink",
+                                  "operator": "EQUAL",
+                                  "value": "BUTTON"
+                                }
+                              ]
+                            },
+                            "aftermath": {
+                              "isHidden": false,
+                              "isDisabled": false
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "selector": "sdi-content",
+                    "title": "Получатели"
+                  },
+                  {
+                    "selector": "sdi-vertical-table",
+                    "dataInterface": {
+                      "input": {
+                        "url": "ds://notification-create-ds/notificationRecipients",
+                        "method": "GET"
+                      }
+                    },
+                    "hideNoValueColumn": true,
+                    "columns": [
+                      {
+                        "name": "allRecipients",
+                        "title": "Отправить всем клиентам",
+                        "type": "boolean"
+                      },
+                      {
+                        "name": "rule",
+                        "title": "Правило списка",
+                        "type": "select",
+                        "effects": [
+                          {
+                            "root": "ds://notification-create-ds/notificationBody",
+                            "condition": {
+                              "operator": "AND",
+                              "predicates": [
+                                {
+                                  "property": "allRecipients",
+                                  "operator": "EQUAL",
+                                  "value": true
+                                }
+                              ]
+                            },
+                            "aftermath": {
+                              "isHidden": true,
+                              "isDisabled": true
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "name": "listType",
+                        "title": "Вид списка получателей",
+                        "type": "select",
+                        "effects": [
+                          {
+                            "root": "ds://notification-create-ds/notificationRecipients",
+                            "condition": {
+                              "operator": "AND",
+                              "predicates": [
+                                {
+                                  "property": "allRecipients",
+                                  "operator": "EQUAL",
+                                  "value": true
+                                }
+                              ]
+                            },
+                            "aftermath": {
+                              "isHidden": true,
+                              "isDisabled": true
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "name": "uploadFileFlag",
+                        "title": "Загрузить из файла",
+                        "type": "boolean",
+                        "effects": [
+                          {
+                            "root": "ds://notification-create-ds/notificationRecipients",
+                            "condition": {
+                              "operator": "AND",
+                              "predicates": [
+                                {
+                                  "property": "allRecipients",
+                                  "operator": "EQUAL",
+                                  "value": true
+                                }
+                              ]
+                            },
+                            "aftermath": {
+                              "isHidden": true,
+                              "isDisabled": true
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "name": "list",
+                        "title": "Список",
+                        "type": "textarea"
+                      }
+                    ]
+                  },
+                  {
+                    "selector": "sdi-content",
+                    "title": "Период отображения"
+                  },
+                  {
+                    "selector": "sdi-vertical-table",
+                    "dataInterface": {
+                      "input": {
+                        "url": "ds://notification-create-ds/notificationDatePeriod",
+                        "method": "GET"
+                      }
+                    },
+                    "isHidden": true,
+                    "isDisabled": true,
+                    "hideNoValueColumn": true,
+                    "columns": [
+                      {
+                        "name": "noTime",
+                        "title": "Бессрочное",
+                        "type": "boolean"
+                      },
+                      {
+                        "name": "dateFrom",
+                        "title": "Начало показа",
+                        "type": "datetime"
+                      },
+                      {
+                        "name": "dateTo",
+                        "title": "Конец показа",
+                        "type": "datetime"
+                      }
+                    ]
+                  },
+                  {
+                    "selector": "sdi-form",
+                    "name": "step-5",
+                    "actions": [
+                      {
+                        "name": "prev",
+                        "title": "Назад",
+                        "appearance": "outline",
+                        "componentName": "MeSteps"
+                      },
+                      {
+                        "name": "submit",
+                        "title": "Сохранить",
+                        "validate": true,
+                        "componentName": "MeSteps",
+                        "postAction": {
+                          "componentName": "step-5",
+                          "name": "back"
+                        }
+                      }
+                    ],
+                    "fields": [
+                      {
+                        "name": "active",
+                        "title": "Активировать при сохранении",
+                        "type": "boolean"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

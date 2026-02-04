@@ -1,0 +1,18 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="20251114130745_collection_config" author="developer&lt;developer@axenix.pro&gt;" runAlways="false">
+        <sql>
+            alter table dui_service.collection
+                add column config varchar;
+        </sql>
+        <rollback>
+            <sql>
+                ALTER TABLE dui_service.collection DROP COLUMN config;
+            </sql>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

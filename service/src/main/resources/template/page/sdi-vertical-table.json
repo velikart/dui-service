@@ -1,0 +1,79 @@
+{
+  "title": "Вертикальная таблица",
+  "route": "/sdi-vertical-table",
+  "layout": {
+    "name": "layout-simple",
+    "blocks": [
+      {
+        "name": "main",
+        "components": [
+          {
+            "selector": "sdi-vertical-table",
+            "name": "SDIVerticalTable",
+            "api": {
+              "method": "GET",
+              "url": "/api/v1/sdi/vertical/{id}"
+            },
+            "columns": [
+              {
+                "name": "fullName",
+                "title": "ФИО (mail)",
+                "type": "string"
+              },
+              {
+                "name": "phone",
+                "title": "Телефон",
+                "type": "phone"
+              },
+              {
+                "name": "email",
+                "title": "E-mail",
+                "type": "email"
+              },
+              {
+                "name": "type",
+                "title": "Тип лица",
+                "type": "string"
+              },
+              {
+                "name": "company",
+                "title": "Компания",
+                "type": "string"
+              },
+              {
+                "name": "inn",
+                "title": "ИНН",
+                "type": "string"
+              },
+              {
+                "name": "kpp",
+                "title": "КПП",
+                "type": "string"
+              },
+              {
+                "name": "snils",
+                "title": "Снилс",
+                "type": "string"
+              },
+              {
+                "name": "actualAdres",
+                "title": "Фактический адрес",
+                "type": "string"
+              },
+              {
+                "name": "legalAdres",
+                "title": "Юридический адрес",
+                "type": "string"
+              },
+              {
+                "name": "mailingAdres",
+                "title": "Почтовый адрес",
+                "type": "string"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,157 @@
+{
+  "title": "Страница с таблицей",
+  "route": "/table",
+  "layout": {
+    "name": "layout-simple",
+    "blocks": [
+      {
+        "name": "main",
+        "components": [
+          {
+            "selector": "sdi-page-header",
+            "title": "Заявки на получение полного доступа",
+            "actions": [
+              {
+                "title": "Добавить заявку",
+                "appearance": null,
+                "icon": "tuiIconPlusCircleLarge",
+                "route": {
+                  "url": "/clients/create"
+                },
+                "disabled": false,
+                "validate": false,
+                "componentName": "addClient"
+              }
+            ],
+            "hiddenActions": [
+              {
+                "name": "download",
+                "title": "Скачать",
+                "icon": "tuiIconDownloadLarge",
+                "componentName": "UsersTable"
+              }
+            ]
+          },
+          {
+            "selector": "sdi-table",
+            "name": "VDKAppealsDoneTable",
+            "api": {
+              "url": "/api/v1/vdk/appeals/list",
+              "method": "POST"
+            },
+            "rowClickable": true,
+            "limit": 10,
+            "actions": [
+              {
+                "name": "edit",
+                "context": "record",
+                "icon": "tuiIconChevronRightLarge",
+                "route": {
+                  "url": "/vdk/appeals/view"
+                }
+              }
+            ],
+            "columns": [
+              {
+                "name": "id",
+                "title": "Id",
+                "type": "string",
+                "isPrimary": true,
+                "isHidden": true
+              },
+              {
+                "name": "number",
+                "title": "Номер обращения",
+                "type": "string"
+              },
+              {
+                "name": "userName",
+                "title": "ФИО (mail) клиента",
+                "type": "string"
+              },
+              {
+                "name": "createDate",
+                "title": "Дата создания",
+                "type": "daterange"
+              },
+              {
+                "name": "status",
+                "title": "Статус",
+                "type": "string"
+              },
+              {
+                "name": "adminName",
+                "title": "ФИО (mail) исполнителя",
+                "type": "string"
+              }
+            ],
+            "sort": {
+              "columns": [
+                {
+                  "name": "createDate",
+                  "title": "Дата создания"
+                }
+              ]
+            },
+            "filter": {
+              "static": [
+                {
+                  "name": "status",
+                  "title": "Статус",
+                  "type": "select",
+                  "validators": [],
+                  "options": [
+                    {
+                      "id": "TO_DO",
+                      "name": "Новое"
+                    },
+                    {
+                      "id": "IN_PROGRESS",
+                      "name": "В Работе"
+                    },
+                    {
+                      "id": "WAITING",
+                      "name": "В ожидании"
+                    },
+                    {
+                      "id": "DONE",
+                      "name": "Выполнено"
+                    },
+                    {
+                      "id": "DEFLECTED",
+                      "name": "Отклонено"
+                    }
+                  ]
+                },
+                {
+                  "name": "adminName",
+                  "title": "ФИО (mail) исполнителя",
+                  "type": "string",
+                  "operator": "LIKE"
+                },
+                {
+                  "name": "createDate",
+                  "title": "Дата создания",
+                  "type": "daterange",
+                  "operator": "BETWEEN"
+                },
+                {
+                  "name": "userName",
+                  "title": "ФИО (mail) клиента",
+                  "type": "string",
+                  "operator": "LIKE"
+                },
+                {
+                  "name": "inn",
+                  "title": "ИНН",
+                  "type": "string",
+                  "operator": "LIKE"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

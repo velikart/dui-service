@@ -1,0 +1,76 @@
+#----------------------------COMMON profile---------------------------------------
+server:
+  port: ${SERVER_PORT:8080}
+  shutdown: graceful
+spring:
+  main:
+    allow-bean-definition-overriding: false
+  application:
+    name: dui-service
+    version: "@version@"
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://${POSTGRES_SERVER}:${POSTGRES_PORT}/${POSTGRES_DB:duiservice}?currentSchema=${POSTGRES_SCHEMA:dui_service}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    hikari:
+      maximum-pool-size: ${POSTGRES_POOL_SIZE:10}
+      connection-timeout: ${POSTGRES_CONNECTION_TIMEOUT:2000}
+      connection-test-query: select 1
+      transaction-isolation: TRANSACTION_READ_COMMITTED
+
+  liquibase:
+    change-log: db/root-changelog.xml
+    contexts: schema
+    enabled: true
+    default-schema: public
+  jpa:
+    open-in-view: false
+    database: POSTGRESQL
+    show-sql: false
+    hibernate.ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc.batch_size: 20
+        format_sql: true
+        default_schema: dui_service
+
+application:
+  kafka:
+    bootstrapServers: ${KAFKA_SERVERS}
+    ssl:
+      enabled: ${KAFKA_SSL_ENABLED:true}
+      key-store-location: ${KAFKA_SSL_KEY_STORE_LOCATION}
+      key-store-password: ${KAFKA_SSL_KEY_STORE_PASSWORD}
+      key-password: ${KAFKA_SSL_KEY_PASSWORD}
+      trust-store-location: ${KAFKA_SSL_TRUST_STORE_LOCATION}
+      trust-store-password: ${KAFKA_SSL_TRUST_STORE_PASSWORD}
+    errorTopic: ${spring.application.name}-error
+    groupConsumer:
+      groupId: ${spring.application.name}
+      pollTimeout: 3000
+      concurrency: ${GROUP_CONSUMER_CONCURRENCY:5}
+      topic: ${spring.application.name}-group
+
+client:
+  print-service:
+    url: ${PRINT_SERVICE_URL}
+  auth-service:
+    url: ${AUTH_SERVICE_URL}
+    authorization:
+      enabled: ${AUTHORIZATION_ENABLED:true}
+    credentials:
+      serviceId: ${AUTH_SYSTEM_SERVICE_ID}
+      serviceSecret: ${AUTH_SYSTEM_SERVICE_SECRET}
+
+
+logging:
+  enabled: ${LOGGING_ENABLED:true}
+  type: ${LOG_TYPE:logstash}
+  masking:
+    enabled: ${LOGGING_MASKING_ENABLED:false}
+  connection:
+    host: ${LOG_HOST}
+    port: ${LOG_PORT:24224}
+
+

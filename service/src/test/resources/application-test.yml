@@ -1,0 +1,33 @@
+spring:
+  autoconfigure:
+    exclude:
+      - ru.axenix.smartax.kafka.common.config.KafkaCommonConfiguration
+      - ru.axenix.smartax.kafka.common.config.KafkaProducerConfiguration
+      - ru.axenix.smartax.kafka.common.config.KafkaErrorHandlerConfiguration
+      - ru.axenix.smartax.kafka.exchange.config.SpecificConsumerConfiguration
+      - ru.axenix.smartax.kafka.exchange.config.KafkaExchangeConfiguration
+      - ru.axenix.smartax.kafka.group.config.KafkaGroupConsumerConfiguration
+      - ru.axenix.smartax.auth.common.config.AuthSecurityAutoConfiguration
+      - ru.axenix.smartax.auth.common.config.AuthEventConsumerAutoConfiguration
+      - ru.axenix.smartax.auth.userclient.config.AuthServiceUserEventConsumerAutoConfiguration
+      - ru.axenix.smartax.auth.userclient.config.AuthServiceUserClientAutoConfiguration
+
+  application:
+    name: dynamic-sandbox
+  jpa:
+    hibernate:
+      ddl-auto: none
+  liquibase:
+    enabled: false
+
+server:
+ port: 8080
+
+logging:
+  enabled: false
+  type: ${LOG_TYPE:logstash}
+  masking:
+    enabled: ${LOGGING_MASKING_ENABLED:false}
+  connection:
+    host: ${LOG_HOST:localhost}
+    port: ${LOG_PORT:24224}

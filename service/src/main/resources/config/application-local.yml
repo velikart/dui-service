@@ -1,0 +1,12 @@
+spring:
+  autoconfigure:
+    exclude:
+      - ru.axenix.smartax.kafka.common.config.KafkaCommonConfiguration
+      - ru.axenix.smartax.kafka.common.config.KafkaProducerConfiguration
+      - ru.axenix.smartax.kafka.common.config.KafkaErrorHandlerConfiguration
+      - ru.axenix.smartax.kafka.exchange.config.SpecificConsumerConfiguration
+      - ru.axenix.smartax.kafka.exchange.config.KafkaExchangeConfiguration
+      - ru.axenix.smartax.kafka.group.config.KafkaGroupConsumerConfiguration
+      - ru.axenix.smartax.auth.common.config.AuthEventConsumerAutoConfiguration
+      - ru.axenix.smartax.auth.userclient.config.AuthServiceUserEventConsumerAutoConfiguration
+      - ru.axenix.smartax.auth.userclient.config.AuthServiceUserClientAutoConfiguration

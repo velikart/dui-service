@@ -1,0 +1,65 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="20221119204419_add_templates_two" author="developer&lt;developer@axenix.pro&gt;" runAlways="false">
+        <sql>
+            insert into template
+            values ('102af3af-645c-4337-b3a3-0c7786d51db5', 'Компонент "Строка действий" (SDI-ACTION-BAR)', 'sdi-action-bar.json', 'sdi-action-bar.png');
+
+            insert into template
+            values ('127fd8d8-4760-44b8-9032-9129e897e19f', 'Компонент "Графики" (SDI-CHART)', 'sdi-chart.json', 'sdi-chart.png');
+
+            insert into template
+            values ('320ff8fc-41c4-4a46-848c-4b58508abbea', 'Компонент "Текстовый и HTML контент" (SDI-CONTENT)', 'sdi-content.json', 'sdi-content.png');
+
+            insert into template
+            values ('fb28495d-89c4-4155-a4cf-06e089154fcb', 'Компонент "Интерфейс фильтра" (SDI-FILTER)', 'sdi-filter.json', 'sdi-filter.png');
+
+            insert into template
+            values ('2c1053e0-6056-428e-b335-4418a076a843', 'Компонент "Форма" (SDI-FORM)', 'sdi-form.json', 'sdi-form.png');
+
+            insert into template
+            values ('6ac516ca-c06f-4458-b1bb-2a70afc6277c', 'Компонент "Модальное окно" (SDI-MODAL)', 'sdi-modal.json', 'sdi-modal.png');
+
+            insert into template
+            values ('4265e0a0-5287-450e-8233-a26e26eb7cfb', 'Компонент "Заголовок" (SDI-PAGE-HEADER)', 'sdi-page-header.json', 'sdi-page-header.png');
+
+            insert into template
+            values ('05786321-c16b-4e9c-8e77-b53e97639140', 'Компонент "Шаги" (SDI-STEPPER)', 'sdi-stepper.json', 'sdi-stepper.png');
+
+            insert into dui_service.template
+            values ('cf64d1b6-dbb3-4ccd-9574-18933e1d551f', 'Компонент "Статические данные" (SDI-SUMMARY)', 'sdi-summary.json', 'sdi-summary.png');
+
+            insert into dui_service.template
+            values ('5093f123-257b-4c4c-adcb-23b8fe66249a', 'Компонент "Вкладки" (SDI-TAB)', 'sdi-tab.json', 'sdi-tab.png');
+
+            insert into dui_service.template
+            values ('55fe7dcb-2be5-44eb-86ce-945b109683a8', 'Компонент "Таблица" (SDI-TABLE)', 'sdi-table.json', 'sdi-table.png');
+
+            insert into dui_service.template
+            values ('16c397f9-1516-4f27-9859-dd54d390cb9b', 'Компонент "Вертикальная таблица" (SDI-VERTICAL-TABLE)', 'sdi-vertical-table.json', 'sdi-vertical-table.png');
+        </sql>
+        <rollback>
+            <sql>
+                DELETE FROM dui_service.template
+                WHERE uuid IN (
+                '102af3af-645c-4337-b3a3-0c7786d51db5',
+                '127fd8d8-4760-44b8-9032-9129e897e19f',
+                '320ff8fc-41c4-4a46-848c-4b58508abbea',
+                'fb28495d-89c4-4155-a4cf-06e089154fcb',
+                '2c1053e0-6056-428e-b335-4418a076a843',
+                '6ac516ca-c06f-4458-b1bb-2a70afc6277c',
+                '4265e0a0-5287-450e-8233-a26e26eb7cfb',
+                '05786321-c16b-4e9c-8e77-b53e97639140',
+                'cf64d1b6-dbb3-4ccd-9574-18933e1d551f',
+                '5093f123-257b-4c4c-adcb-23b8fe66249a',
+                '55fe7dcb-2be5-44eb-86ce-945b109683a8',
+                '16c397f9-1516-4f27-9859-dd54d390cb9b'
+                );
+            </sql>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

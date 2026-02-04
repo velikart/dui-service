@@ -1,0 +1,54 @@
+{
+  "title": "Степпер",
+  "route": "/stepper",
+  "layout": {
+    "name": "layout-simple",
+    "blocks": [
+      {
+        "name": "main",
+        "components": [
+          {
+            "selector": "sdi-stepper",
+            "name": "MeSteps",
+            "actions": [
+              {
+                "name": "save",
+                "api": {
+                  "url": "/api/v2/notifications",
+                  "method": "POST"
+                },
+                "postAction": {
+                  "route": {
+                    "url": "/sdi-notifications"
+                  }
+                }
+              }
+            ],
+            "steps": [
+              {
+                "name": "notificationType",
+                "title": "Вид уведомления"
+              },
+              {
+                "name": "notificationBody",
+                "title": "Настройки контента"
+              },
+              {
+                "name": "notificationRecipients",
+                "title": "Получатели"
+              },
+              {
+                "name": "notificationDatePeriod",
+                "title": "Период отображения"
+              },
+              {
+                "name": "notificationCheck",
+                "title": "Проверка"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

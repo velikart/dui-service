@@ -1,0 +1,104 @@
+{
+  "title": "Графики",
+  "route": "/sdi-shart",
+  "layout": {
+    "name": "layout-simple",
+    "blocks": [
+      {
+        "name": "main",
+        "components": [
+          {
+            "selector": "sdi-page-header",
+            "title": "Отчеты",
+            "actions": [],
+            "loader": "circle"
+          },
+          {
+            "selector": "sdi-tab",
+            "tabs": [
+              {
+                "name": "users",
+                "title": "Пользователи",
+                "components": [
+                  {
+                    "selector": "sdi-chart",
+                    "type": "line-chart",
+                    "filter": {
+                      "modifiers": [
+                        {
+                          "name": "grouping",
+                          "title": "Группировать",
+                          "type": "select",
+                          "target": "period",
+                          "options": [
+                            {
+                              "name": "По дням",
+                              "id": "DAY"
+                            },
+                            {
+                              "name": "По неделям",
+                              "id": "WEEK",
+                              "disabled": true
+                            },
+                            {
+                              "name": "По месяцам",
+                              "id": "MONTH",
+                              "disabled": true
+                            }
+                          ],
+                          "default": "DAY"
+                        }
+                      ],
+                      "static": [
+                        {
+                          "name": "period",
+                          "title": "Период",
+                          "type": "daterange",
+                          "rangeType": "Month",
+                          "default": {
+                            "from": "12.11.2022",
+                            "to": "19.11.2022"
+                          }
+                        },
+                        {
+                          "name": "source",
+                          "title": "Источник",
+                          "type": "select",
+                          "default": "ALL",
+                          "options": [
+                            {
+                              "name": "Все",
+                              "id": "ALL"
+                            },
+                            {
+                              "name": "Веб-версия",
+                              "id": "WEB"
+                            },
+                            {
+                              "name": "Мобильное приложение",
+                              "id": "MOBILE"
+                            },
+                            {
+                              "name": "Прочее",
+                              "id": "OTHERS"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "api": {
+                      "url": "/api/v1/chart/users",
+                      "method": "POST"
+                    },
+                    "loader": "circle"
+                  }
+                ]
+              }
+            ],
+            "loader": "circle"
+          }
+        ]
+      }
+    ]
+  }
+}

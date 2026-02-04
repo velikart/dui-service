@@ -1,0 +1,30 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="20221120022012_update_template_type_2" author="developer&lt;developer@axenix.pro&gt;" runAlways="false">
+        <sql>
+            update dui_service.template
+            set type = 'PAGE'
+            where filename_page in ('blank.json', 'table.json', 'view.json', 'edit.json', 'stepper.json', 'chart.json')
+
+        </sql>
+        <rollback>
+            <sql>
+                UPDATE dui_service.template
+                SET type = 'COMPONENT'
+                WHERE filename_page IN (
+                'blank.json',
+                'table.json',
+                'view.json',
+                'edit.json',
+                'stepper.json',
+                'chart.json'
+                )
+                AND type = 'PAGE';
+            </sql>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

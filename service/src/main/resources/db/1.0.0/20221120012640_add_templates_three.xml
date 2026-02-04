@@ -1,0 +1,20 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="20221120012640_add_templates_three" author="developer&lt;developer@axenix.pro&gt;" runAlways="false">
+        <sql>
+            insert into dui_service.template
+            values ('85cfd132-af81-4da5-8469-52b9b218cd79', 'Страница с графиками', 'chart.json', 'chart.png');
+
+        </sql>
+        <rollback>
+            <sql>
+                delete from dui_service.template
+                where uuid in ('85cfd132-af81-4da5-8469-52b9b218cd79');
+            </sql>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

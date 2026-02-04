@@ -1,0 +1,33 @@
+plugins {
+    id 'ru.axenix.smartax.plugin.library-configurator-plugin' version "${CONFIGURATOR_PLUGIN_VERSION}"
+}
+
+dependencies {
+    api project(':dui-service-model')
+
+    api 'ru.axenix.smartax.print-service:print-service-client'
+
+    implementation 'ru.axenix.smartax.logging-lib:logging-lib-core'
+    implementation 'ru.axenix.smartax.service-web:service-web'
+
+    implementation 'org.apache.commons:commons-lang3'
+    implementation 'org.mapstruct:mapstruct'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'net.minidev:json-smart:2.4.9'
+    implementation 'org.mapstruct:mapstruct'
+
+    compileOnly 'org.projectlombok:lombok'
+
+    annotationProcessor 'org.projectlombok:lombok'
+    annotationProcessor 'org.mapstruct:mapstruct-processor'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+    testImplementation 'ru.axenix.smartax.test-commons:test-commons'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    //TODO Разобраться с конфликтом в плагине library + service-web
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.13.4'
+}

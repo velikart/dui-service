@@ -1,0 +1,30 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="20221005060823_collection" author="developer&lt;developer@axenix.pro&gt;" runAlways="false">
+        <sql>
+            create table dui_service.collection
+            (
+                history_uuid     uuid  not null constraint collection__pk primary key,
+                collection_uuid  uuid  not null,
+                creation_date    timestamp(0) not null,
+                is_current       boolean,
+                user_id          varchar(36) not null,
+                title            varchar(255) not null,
+                pages            varchar not null,
+                mocks            varchar not null
+            );
+
+            CREATE UNIQUE INDEX collection_current_idx ON dui_service.collection (collection_uuid, is_current);
+
+        </sql>
+        <rollback>
+            <sql>
+                drop table if exists dui_service.collection cascade;
+            </sql>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

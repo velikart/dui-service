@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?><databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <include file="20221005060706_schema.xml" relativeToChangelogFile="true"/>
+    <include file="20221005060823_collection.xml" relativeToChangelogFile="true"/>
+    <include file="20221119163815_template.xml" relativeToChangelogFile="true"/>
+    <include file="20221119163947_add_templates.xml" relativeToChangelogFile="true"/>
+    <include file="20221119204419_add_templates_two.xml" relativeToChangelogFile="true"/>
+    <include file="20221120012640_add_templates_three.xml" relativeToChangelogFile="true"/>
+    <include file="20221120020133_template_type.xml" relativeToChangelogFile="true"/>
+    <include file="20221120020328_update_template_type.xml" relativeToChangelogFile="true"/>
+    <include file="20221120022012_update_template_type_2.xml" relativeToChangelogFile="true"/>
+    <include file="20251022234633_table_pages.xml" relativeToChangelogFile="true"/>
+    <include file="20251114130745_collection_config.xml" relativeToChangelogFile="true"/>
+    <include file="20251115124010_collection_config_default.xml" relativeToChangelogFile="true"/>
+</databaseChangeLog>

@@ -1,0 +1,18 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="20221120020133_template_type" author="developer&lt;developer@axenix.pro&gt;" runAlways="false">
+        <sql>
+            alter table dui_service.template
+                add column type varchar(30) not null default 'COMPONENT';
+        </sql>
+        <rollback>
+            <sql>
+                ALTER TABLE dui_service.template DROP COLUMN type;
+            </sql>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

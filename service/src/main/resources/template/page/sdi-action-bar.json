@@ -1,0 +1,53 @@
+{
+  "title": "Строка действий",
+  "route": "/sdi-action-bar",
+  "layout": {
+    "name": "layout-simple",
+    "blocks": [
+      {
+        "name": "main",
+        "components": [
+          {
+            "selector": "sdi-action-bar",
+            "actions": [
+              {
+                "componentName": "FirstJournal",
+                "name": "add",
+                "title": "Добавить",
+                "icon": "tuiIconPlusCircleLarge"
+              },
+              {
+                "title": "Переход",
+                "icon": "tuiIconCard",
+                "route": {
+                  "url": "/page6"
+                }
+              }
+            ],
+            "hidden": [
+              {
+                "componentName": "FirstJournal",
+                "name": "download",
+                "title": "Скачать",
+                "icon": "tuiIconDownloadLarge"
+              },
+              {
+                "componentName": "FirstJournal",
+                "name": "reload",
+                "title": "Обновить",
+                "icon": "tuiIconRefreshLarge"
+              },
+              {
+                "title": "Ссылка на ya.ru",
+                "route": {
+                  "url": "https://ya.ru",
+                  "target": "_blank"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

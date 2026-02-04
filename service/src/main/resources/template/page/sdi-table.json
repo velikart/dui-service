@@ -1,0 +1,196 @@
+{
+  "title": "Таблица",
+  "route": "/sdi-table",
+  "layout": {
+    "name": "layout-simple",
+    "blocks": [
+      {
+        "name": "main",
+        "components": [
+          {
+            "selector": "sdi-table",
+            "name": "UsersTable",
+            "api": {
+              "url": "/api/v2/user/list/true",
+              "method": "POST"
+            },
+            "limit": 10,
+            "rowClickable": "true",
+            "actions": [
+              {
+                "name": "edit",
+                "context": "record",
+                "icon": "tuiIconChevronRightLarge",
+                "route": {
+                  "url": "/clients/edit"
+                }
+              }
+            ],
+            "filter": {
+              "quickSearch": true,
+              "advanced": [
+                {
+                  "name": "id",
+                  "title": "ID",
+                  "type": "number"
+                },
+                {
+                  "name": "title",
+                  "title": "Наименование",
+                  "type": "string"
+                },
+                {
+                  "name": "field2",
+                  "title": "Зашитый селектор",
+                  "type": "select",
+                  "options": [
+                    {
+                      "name": "Значение из инструкции 1",
+                      "id": "1"
+                    },
+                    {
+                      "name": "Значение из инструкции 2",
+                      "id": "2"
+                    },
+                    {
+                      "name": "Значение из инструкции 3",
+                      "id": "3"
+                    }
+                  ]
+                },
+                {
+                  "name": "field4",
+                  "title": "Date filter",
+                  "type": "date",
+                  "operators": [
+                    "GREATER"
+                  ]
+                },
+                {
+                  "name": "field5",
+                  "title": "Period filter",
+                  "type": "daterange",
+                  "showIntervals": "past",
+                  "minDate": "01.01.2022"
+                },
+                {
+                  "name": "field6",
+                  "title": "Decimal filter",
+                  "type": "decimal"
+                },
+                {
+                  "name": "field7",
+                  "title": "MultiSelect",
+                  "type": "select",
+                  "multiple": true,
+                  "options": [
+                    {
+                      "name": "Корова",
+                      "id": "1"
+                    },
+                    {
+                      "name": "Собака",
+                      "id": "2"
+                    },
+                    {
+                      "name": "Кошка",
+                      "id": "3"
+                    },
+                    {
+                      "name": "Медведь",
+                      "id": "4"
+                    },
+                    {
+                      "name": "Пончик",
+                      "id": "5"
+                    },
+                    {
+                      "name": "Свинья",
+                      "id": "6"
+                    }
+                  ]
+                }
+              ],
+              "static": [
+                {
+                  "name": "somePeriod",
+                  "title": "Период",
+                  "type": "daterange",
+                  "operator": "BETWEEN",
+                  "showIntervals": "past",
+                  "minDate": "01.01.1970"
+                },
+                {
+                  "name": "date1",
+                  "title": "Дата 1",
+                  "type": "date",
+                  "default": "01.08.2022"
+                },
+                {
+                  "name": "selector1",
+                  "title": "Зашитый селектор",
+                  "type": "select",
+                  "multiple": true,
+                  "options": [
+                    {
+                      "id": "1",
+                      "name": "Значение из инструкции 1"
+                    },
+                    {
+                      "id": "2",
+                      "name": "Значение из инструкции 2"
+                    },
+                    {
+                      "id": "3",
+                      "name": "Значение из инструкции 3"
+                    }
+                  ]
+                }
+              ],
+              "custom": [
+                {
+                  "title": "Какой-то фильтр",
+                  "subFilter": [
+                    {
+                      "name": "customFilterOpened",
+                      "title": "Открытые"
+                    },
+                    {
+                      "name": "customFilterClosed",
+                      "title": "Закрытые"
+                    }
+                  ]
+                }
+              ]
+            },
+            "columns": [
+              {
+                "name": "id",
+                "title": "Id",
+                "type": "string",
+                "isPrimary": true,
+                "isHidden": true
+              },
+              {
+                "name": "email",
+                "title": "E-mail",
+                "type": "string"
+              },
+              {
+                "name": "phone",
+                "title": "Телефон",
+                "type": "string"
+              },
+              {
+                "name": "registrationDate",
+                "title": "Дата регистрации",
+                "type": "string"
+              }
+            ],
+            "loader": "circle"
+          }
+        ]
+      }
+    ]
+  }
+}

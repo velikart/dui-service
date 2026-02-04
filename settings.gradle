@@ -1,0 +1,27 @@
+pluginManagement {
+    repositories {
+        maven {
+            url "${NEXUS_GRADLE_CUSTOM_PLUGINS_URL}"
+            credentials {
+                username "${NEXUS_USER}"
+                password "${NEXUS_PASSWORD}"
+            }
+            allowInsecureProtocol = true
+        }
+        maven {
+            url "${NEXUS_GRADLE_PLUGINS_URL}"
+            credentials {
+                username "${NEXUS_USER}"
+                password "${NEXUS_PASSWORD}"
+            }
+            allowInsecureProtocol = true
+        }
+    }
+}
+
+rootProject.name = 'dui-service'
+include('service', 'model', 'integration')
+
+project(':service').name = 'dui-service'
+project(':model').name = 'dui-service-model'
+project(':integration').name = 'dui-service-integration'

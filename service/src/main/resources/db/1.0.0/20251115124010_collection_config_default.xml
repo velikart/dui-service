@@ -1,0 +1,54 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="20251115124010_collection_config_default" author="developer&lt;developer@axenix.pro&gt;" runAlways="false">
+        <sql>
+            alter table dui_service.collection
+            alter column pages type jsonb
+                using case
+                  when pages is null or btrim(pages) = '' then '[]'::jsonb
+                  else pages::jsonb
+                end,
+            alter column mocks type jsonb
+                using case
+                  when mocks is null or btrim(mocks) = '' then '[]'::jsonb
+                  else mocks::jsonb
+                end,
+            alter column config type jsonb
+                using case
+                  when config is null or btrim(config) = '' then '{}'::jsonb
+                  else config::jsonb
+                end;
+
+            alter table dui_service.collection
+                alter column pages  set default '[]'::jsonb,
+            alter column pages  set not null,
+            alter column mocks  set default '[]'::jsonb,
+            alter column mocks  set not null,
+            alter column config set default '{}'::jsonb,
+            alter column config set not null;
+        </sql>
+        <rollback>
+            <sql>
+                alter table dui_service.collection
+                alter column pages drop not null,
+                alter column pages drop default,
+                alter column mocks drop not null,
+                alter column mocks drop default,
+                alter column config drop not null,
+                alter column config drop default;
+
+                alter table dui_service.collection
+                alter column pages type varchar
+                using pages::text,
+                alter column mocks type varchar
+                using mocks::text,
+                alter column config type varchar
+                using config::text;
+            </sql>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

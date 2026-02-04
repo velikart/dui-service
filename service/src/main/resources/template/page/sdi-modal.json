@@ -1,0 +1,46 @@
+{
+  "title": "Модальное окно",
+  "route": "/sdi-modal",
+  "layout": {
+    "name": "layout-simple",
+    "blocks": [
+      {
+        "name": "main",
+        "components": [
+          {
+            "selector": "sdi-action-bar",
+            "actions": [
+              {
+                "componentName": "VDKAdminUpdatePassDialog",
+                "name": "showComponent",
+                "title": "Сменить пароль",
+                "icon": "tuiIconPlusCircleLarge"
+              }
+            ]
+          },
+          {
+            "selector": "sdi-modal",
+            "name": "VDKAdminUpdatePassDialog",
+            "actions": [
+              {
+                "name": "hideComponent",
+                "title": "Ок",
+                "componentName": "VDKAdminUpdatePassDialog"
+              }
+            ],
+            "isHidden": true,
+            "title": "Уведомление",
+            "components": [
+              {
+                "name": "VDKUpdatePassDialogContent",
+                "selector": "sdi-content",
+                "content": "Пароль для пользователя отправлен на почту."
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "dataSources": []
+}

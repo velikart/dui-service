@@ -1,0 +1,23 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="20221119163815_template" author="developer&lt;developer@axenix.pro&gt;" runAlways="false">
+        <sql>
+            create table dui_service.template
+            (
+                uuid              uuid  not null constraint template__pk primary key,
+                title             varchar(255) not null,
+                filename_page     varchar(255) not null,
+                filename_image    varchar(255) not null
+            );
+        </sql>
+        <rollback>
+            <sql>
+                drop table if exists dui_service.template cascade;
+            </sql>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

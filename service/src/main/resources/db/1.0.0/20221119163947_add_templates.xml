@@ -1,0 +1,38 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="20221119163947_add_templates" author="developer&lt;developer@axenix.pro&gt;" runAlways="false">
+        <sql>
+            insert into dui_service.template
+            values ('89e2daf5-f1cc-424e-a739-de5da9833e60', 'Пустая страница', 'blank.json', 'blank.png');
+
+            insert into dui_service.template
+            values ('7f91eeb6-f350-4de7-b062-8cb8d61328b1', 'Страница с таблицей', 'table.json', 'table.png');
+
+            insert into dui_service.template
+            values ('6825760f-f6e0-4e5f-8a88-4d8777d2f122', 'Страница просмотра', 'view.json', 'view.png');
+
+            insert into dui_service.template
+            values ('308cf1c7-0925-4bcb-b5e0-2efeb3581f9b', 'Страница формы редактирования', 'edit.json', 'edit.png');
+
+            insert into dui_service.template
+            values ('62f812ad-4851-4f7f-8614-9f82c63cd010', 'Страница создания степпером', 'stepper.json', 'stepper.png');
+
+        </sql>
+        <rollback>
+            <sql>
+                delete from dui_service.template
+                where uuid in (
+                '89e2daf5-f1cc-424e-a739-de5da9833e60',
+                '7f91eeb6-f350-4de7-b062-8cb8d61328b1',
+                '6825760f-f6e0-4e5f-8a88-4d8777d2f122',
+                '308cf1c7-0925-4bcb-b5e0-2efeb3581f9b',
+                '62f812ad-4851-4f7f-8614-9f82c63cd010'
+                );
+            </sql>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>
