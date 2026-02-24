@@ -55,6 +55,11 @@ application:
 client:
   print-service:
     url: ${PRINT_SERVICE_URL}
+  series-service:
+    url: ${SERIES_SERVICE_URL}
+    series-path: ${SERIES_SERVICE_PATH:/api/v1/series/{seriesNum}}
+    dispatching-table-path: ${DISPATCHING_TABLE_PATH:/api/v1/dispatching/table}
+    corrections-predict-path: ${CORRECTIONS_PREDICT_PATH:/api/v1/corrections/predict}
   auth-service:
     url: ${AUTH_SERVICE_URL}
     authorization:
