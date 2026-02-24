@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -22,6 +23,7 @@ import java.util.Enumeration;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Service
 public class CorrectionPredictTransformServiceImpl
@@ -66,6 +68,14 @@ public class CorrectionPredictTransformServiceImpl
 
     private static final String MAX_DP_PERCENT_FIELD = "max_dp_percent";
     private static final String MAX_GV_PERCENT_FIELD = "max_gv_percent";
+
+    private static final Set<String> HOP_BY_HOP_HEADERS = Set.of(
+            "content-length",
+            "transfer-encoding",
+            "host",
+            "connection",
+            "accept-encoding"
+    );
 
     @Value("${client.series-service.url}")
     private String seriesServiceUrl;
@@ -238,16 +248,29 @@ public class CorrectionPredictTransformServiceImpl
 
     private HttpHeaders extractHeaders(HttpServletRequest request) {
         HttpHeaders headers = new HttpHeaders();
-        Enumeration<String> headerNames = request.getHeaderNames();
 
-        if (headerNames != null) {
-            while (headerNames.hasMoreElements()) {
-                String headerName = headerNames.nextElement();
-                headers.put(headerName, Collections.list(request.getHeaders(headerName)));
+        if (request != null) {
+            Enumeration<String> headerNames = request.getHeaderNames();
+
+            if (headerNames != null) {
+                while (headerNames.hasMoreElements()) {
+                    String headerName = headerNames.nextElement();
+                    if (!isHopByHopHeader(headerName)) {
+                        headers.put(headerName, Collections.list(request.getHeaders(headerName)));
+                    }
+                }
             }
         }
 
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(List.of(MediaType.APPLICATION_JSON));
+
         return headers;
+    }
+
+    private boolean isHopByHopHeader(String headerName) {
+        String name = headerName == null ? "" : headerName.toLowerCase();
+        return HOP_BY_HOP_HEADERS.contains(name);
     }
 
     private Map<String, Object> transform(JsonNode responseBody) {
