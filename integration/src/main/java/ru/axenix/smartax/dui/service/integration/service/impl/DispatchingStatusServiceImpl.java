@@ -43,6 +43,12 @@ public class DispatchingStatusServiceImpl implements DispatchingStatusService {
     private static final String SORT_BY_PARAM = "sort_by";
     private static final String SORT_DIR_PARAM = "sort_dir";
     private static final String DIRECTION_FIELD = "direction";
+    private static final String TEXT_FIELD = "text";
+    private static final String ROUTE_FIELD = "route";
+    private static final String CHILDREN_FIELD = "children";
+    private static final String URL_PARAMS_FIELD = "urlParams";
+    private static final String ID_FIELD = "id";
+    private static final int MENU_LIMIT = 20;
 
     @Value("${client.series-service.url}")
     private String seriesServiceUrl;
@@ -87,6 +93,45 @@ public class DispatchingStatusServiceImpl implements DispatchingStatusService {
         return new DispatchingStatusCountsResponse(items, String.valueOf(total));
     }
 
+
+    @Override
+    public List<Map<String, Object>> getDispatchingMenu(HttpServletRequest request) {
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(seriesServiceUrl)
+                .path(dispatchingTablePath)
+                .queryParam(LIMIT_FIELD, MENU_LIMIT)
+                .queryParam(OFFSET_PARAM, 0);
+
+        HttpHeaders headers = extractHeaders(request);
+
+        ResponseEntity<Object> response = restTemplate.exchange(
+                builder.build().toUriString(),
+                HttpMethod.GET,
+                new HttpEntity<>(null, headers),
+                Object.class
+        );
+
+        Map<String, Object> responseMap = objectMapper.convertValue(response.getBody(), Map.class);
+        Object itemsObject = responseMap == null ? null : responseMap.get(ITEMS_FIELD);
+        List<Map<String, Object>> items = asListOfMaps(itemsObject);
+
+        List<Map<String, Object>> children = items.stream()
+                .limit(MENU_LIMIT)
+                .map(this::toMenuChild)
+                .toList();
+
+        return List.of(
+                Map.of(
+                        TEXT_FIELD, "Исторические данные",
+                        ROUTE_FIELD, "/history"
+                ),
+                Map.of(
+                        TEXT_FIELD, "Диспечирование этапов",
+                        ROUTE_FIELD, "/main",
+                        CHILDREN_FIELD, children
+                )
+        );
+    }
+
     @Override
     public Map<String, Object> getTableWithRecords(Map<String, Object> payload, HttpServletRequest request) {
         String url = buildDispatchingUrlFromPayload(payload);
@@ -101,6 +146,16 @@ public class DispatchingStatusServiceImpl implements DispatchingStatusService {
 
         Map<String, Object> responseMap = objectMapper.convertValue(response.getBody(), Map.class);
         return normalizeRecordsField(responseMap);
+    }
+
+    private Map<String, Object> toMenuChild(Map<String, Object> item) {
+        String seriesNum = asString(item.get(FILTER_SERIES_NUM));
+
+        return Map.of(
+                TEXT_FIELD, seriesNum,
+                ROUTE_FIELD, "/step/" + seriesNum,
+                URL_PARAMS_FIELD, Map.of(ID_FIELD, seriesNum)
+        );
     }
 
     private Map<String, Object> normalizeRecordsField(Map<String, Object> source) {

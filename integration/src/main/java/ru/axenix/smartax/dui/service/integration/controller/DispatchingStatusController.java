@@ -19,6 +19,7 @@ import ru.axenix.smartax.dui.service.integration.dto.DispatchingStatusCountsResp
 import ru.axenix.smartax.dui.service.integration.service.DispatchingStatusService;
 import ru.axenix.smartax.web.swagger.annotation.BaseResponse;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -41,6 +42,20 @@ public class DispatchingStatusController {
     @GetMapping("/status-counts")
     public DispatchingStatusCountsResponse getStatusCounts(HttpServletRequest request) {
         return dispatchingStatusService.getStatusCounts(request);
+    }
+
+
+    @Operation(
+            tags = "Интеграция с series-service",
+            summary = "Меню этапов диспетчирования",
+            description = "Вызывает /api/v1/dispatching/table, берет первые 20 элементов и возвращает меню для UI",
+            security = {@SecurityRequirement(name = HttpHeaders.AUTHORIZATION)}
+    )
+    @BaseResponse
+    @Authorization
+    @GetMapping("/menu")
+    public List<Map<String, Object>> getDispatchingMenu(HttpServletRequest request) {
+        return dispatchingStatusService.getDispatchingMenu(request);
     }
 
     @Operation(

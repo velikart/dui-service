@@ -123,6 +123,54 @@ class DispatchingStatusServiceImplTest {
         assertEquals("4", result.getTotal());
     }
 
+    @Test
+    void getDispatchingMenuShouldReturnFixedStructureAndFirst20Items() {
+        HttpServletRequest request = org.mockito.Mockito.mock(HttpServletRequest.class);
+        when(request.getHeaderNames()).thenReturn(toEnumeration(List.of("Authorization")));
+        when(request.getHeaders("Authorization")).thenReturn(toEnumeration(List.of("Bearer token")));
+
+        List<Map<String, Object>> items = java.util.stream.IntStream.rangeClosed(1, 25)
+                .mapToObj(i -> Map.<String, Object>of("series_num", "п." + i))
+                .toList();
+        Map<String, Object> responseBody = Map.of("items", items, "total", 25);
+
+        when(restTemplate.exchange(
+                anyString(),
+                eq(HttpMethod.GET),
+                any(HttpEntity.class),
+                eq(Object.class)
+        )).thenReturn(ResponseEntity.ok(responseBody));
+
+        List<Map<String, Object>> result = dispatchingStatusService.getDispatchingMenu(request);
+
+        assertEquals(2, result.size());
+        assertEquals("Исторические данные", result.get(0).get("text"));
+        assertEquals("/history", result.get(0).get("route"));
+
+        Map<String, Object> dispatchingNode = (Map<String, Object>) result.get(1);
+        assertEquals("Диспечирование этапов", dispatchingNode.get("text"));
+        assertEquals("/main", dispatchingNode.get("route"));
+
+        List<Map<String, Object>> children = (List<Map<String, Object>>) dispatchingNode.get("children");
+        assertEquals(20, children.size());
+        assertEquals("п.1", children.get(0).get("text"));
+        assertEquals("/step/п.1", children.get(0).get("route"));
+        assertEquals(Map.of("id", "п.1"), children.get(0).get("urlParams"));
+        assertEquals("п.20", children.get(19).get("text"));
+
+        ArgumentCaptor<String> urlCaptor = ArgumentCaptor.forClass(String.class);
+        verify(restTemplate).exchange(
+                urlCaptor.capture(),
+                eq(HttpMethod.GET),
+                any(HttpEntity.class),
+                eq(Object.class)
+        );
+
+        String url = urlCaptor.getValue();
+        assertTrue(url.startsWith("http://series-service/api/v1/dispatching/table?"));
+        assertTrue(url.contains("limit=20"));
+        assertTrue(url.contains("offset=0"));
+    }
 
     @Test
     void getTableWithRecordsShouldMapPayloadToDispatchingQueryParameters() {
