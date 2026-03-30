@@ -39,4 +39,10 @@ dependencies {
 
 }
 
+tasks.named('processResources') {
+    from("$rootDir/docs") {
+        include 'template/**'
+    }
+}
+
 

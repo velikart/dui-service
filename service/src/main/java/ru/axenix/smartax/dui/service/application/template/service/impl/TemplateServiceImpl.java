@@ -81,7 +81,7 @@ public class TemplateServiceImpl implements TemplateService {
      * @return Файл json-инструкции.
      */
     private Resource getPage(String filenamePage) {
-        Resource res = new ClassPathResource("template/page/" + filenamePage);
+        Resource res = new ClassPathResource("template/collection/" + filenamePage);
         if (!res.exists()) {
             throw ErrorDescription.TEMPLATE_PAGE_NOT_FOUND.exception();
         }
