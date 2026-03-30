@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.axenix.smartax.common.security.Authorization;
+import ru.axenix.smartax.common.security.SecurityContext;
 
 import ru.axenix.smartax.dui.service.application.collection.model.CollectionDto;
 import ru.axenix.smartax.dui.service.application.collection.model.CollectionHistoryDto;
@@ -41,10 +42,7 @@ import java.util.UUID;
 @SecurityScheme(type = SecuritySchemeType.APIKEY, name = HttpHeaders.AUTHORIZATION, in = SecuritySchemeIn.HEADER)
 public class CollectionController {
 
-    private static final String USER_ID = "fd1eb78d-1e09-4ee3-98db-5469108cd7fe";
-
     private final CollectionService collectionService;
-
 
     @Operation(
             tags = "Коллекции администратора",
@@ -56,7 +54,7 @@ public class CollectionController {
     @Authorization
     @PostMapping("/collection/list")
     public List<CollectionShortDto> getAllCollections() {
-        return collectionService.getAllCollections(USER_ID);
+        return collectionService.getAllCollections(SecurityContext.getUserInfoOrEmpty().getId());
     }
 
     @Operation(
@@ -132,7 +130,7 @@ public class CollectionController {
     @Authorization
     @PostMapping("/collection")
     public CollectionDto createCollection(@RequestBody CollectionDto collection) {
-        return collectionService.createCollection(USER_ID, collection);
+        return collectionService.createCollection(SecurityContext.getUserInfoOrEmpty().getId(), collection);
     }
 
     @Operation(

@@ -10,3 +10,6 @@ spring:
       - ru.axenix.smartax.auth.common.config.AuthEventConsumerAutoConfiguration
       - ru.axenix.smartax.auth.userclient.config.AuthServiceUserEventConsumerAutoConfiguration
       - ru.axenix.smartax.auth.userclient.config.AuthServiceUserClientAutoConfiguration
+
+logging:
+  enabled: ${LOGGING_ENABLED:false}

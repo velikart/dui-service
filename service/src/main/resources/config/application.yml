@@ -34,6 +34,20 @@ spring:
         jdbc.batch_size: 20
         format_sql: true
         default_schema: dui_service
+  ai:
+    mcp:
+      server:
+        transport: WEBMVC
+        name: dui-collection-mcp
+        instructions: >
+          MCP server for dui-service collections (manifest JSON).
+          Supports reading, creating and updating collections via existing CollectionService.
+
+dui:
+  mcp:
+    http-auth:
+      username: ${MCP_USERNAME:}
+      password: ${MCP_PASSWORD:}
 
 application:
   kafka:
@@ -55,11 +69,6 @@ application:
 client:
   print-service:
     url: ${PRINT_SERVICE_URL}
-  series-service:
-    url: ${SERIES_SERVICE_URL}
-    series-path: ${SERIES_SERVICE_PATH:/api/v1/series/{seriesNum}}
-    dispatching-table-path: ${DISPATCHING_TABLE_PATH:/api/v1/dispatching/table}
-    corrections-predict-path: ${CORRECTIONS_PREDICT_PATH:/api/v1/corrections/predict}
   auth-service:
     url: ${AUTH_SERVICE_URL}
     authorization:
@@ -75,7 +84,6 @@ logging:
   masking:
     enabled: ${LOGGING_MASKING_ENABLED:false}
   connection:
-    host: ${LOG_HOST}
+    host: ${LOG_HOST:localhost}
     port: ${LOG_PORT:24224}
-
 

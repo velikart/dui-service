@@ -19,6 +19,10 @@ pluginManagement {
     }
 }
 
+plugins {
+    id 'ru.axenix.smartax.plugin.dependency-configurator-plugin' version "${CONFIGURATOR_PLUGIN_VERSION}"
+}
+
 rootProject.name = 'dui-service'
 include('service', 'model', 'integration')
 

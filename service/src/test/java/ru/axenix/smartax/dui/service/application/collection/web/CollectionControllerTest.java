@@ -45,7 +45,7 @@ class CollectionControllerTest {
     @Test
     @DisplayName("Получение списка коллекций администратора")
     void testGetAllCollections() {
-        String userId = "fd1eb78d-1e09-4ee3-98db-5469108cd7fe";
+        String userId = "testUser";
         UserInfo userInfo = new UserInfo();
         userInfo.setId(userId);
         List<CollectionShortDto> expectedCollections =
@@ -133,7 +133,7 @@ class CollectionControllerTest {
     @Test
     @DisplayName("Создание коллекции")
     void testCreateCollection() {
-        String userId = "fd1eb78d-1e09-4ee3-98db-5469108cd7fe";
+        String userId = "testUser";
         UserInfo userInfo = new UserInfo();
         userInfo.setId(userId);
         CollectionDto collectionToCreate = new CollectionDto();

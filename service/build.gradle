@@ -4,41 +4,38 @@ plugins {
 }
 
 dependencies {
+    implementation platform(external.spring.boot.bom)
     implementation project(':dui-service-integration')
 
-    implementation 'ru.axenix.smartax.auth-common:auth-common'
-    implementation 'ru.axenix.smartax.auth-common:user-client'
-    implementation 'ru.axenix.smartax.kafka-starter:group'
-    implementation 'ru.axenix.smartax.logging-lib:logging-lib-core'
-    implementation 'ru.axenix.smartax.service-web:service-web'
-    implementation 'ru.axenix.smartax.util:util'
+    implementation internal.auth.common
+    implementation internal.kafka.group
+    implementation internal.logging.common.lib
+    implementation internal.service.web
+    implementation internal.util
 
-    implementation 'org.apache.commons:commons-lang3'
-    implementation 'org.liquibase:liquibase-core'
-    implementation 'org.mapstruct:mapstruct'
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation external.liquibase.core
+    implementation external.mapstruct
+    implementation external.springdoc.openapi.starter.webmvc.ui
+    implementation external.spring.boot.starter.web
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation external.spring.boot.starter.actuator
+    implementation external.spring.boot.starter.data.jpa
+    implementation external.spring.boot.starter.validation
+    implementation 'org.springframework.ai:spring-ai-starter-mcp-server-webmvc:1.0.3'
     implementation 'net.minidev:json-smart:2.4.9'
-    implementation 'org.mapstruct:mapstruct'
 
-    runtimeOnly 'org.postgresql:postgresql'
+    runtimeOnly external.postgresql
 
-    compileOnly 'org.projectlombok:lombok'
+    compileOnly external.lombok
 
-    annotationProcessor 'org.projectlombok:lombok'
-    annotationProcessor 'org.mapstruct:mapstruct-processor'
-    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    annotationProcessor external.lombok
+    annotationProcessor external.mapstruct.processor
 
-    testImplementation 'ru.axenix.smartax.test-commons:test-commons'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'io.zonky.test:embedded-database-spring-test'
-    testImplementation 'io.zonky.test:embedded-postgres'
+    testImplementation internal.test.commons
+    testImplementation external.spring.boot.starter.test
+    testImplementation external.embedded.database.spring.test
+    testImplementation external.embedded.postgres
 
 }
-
 
 
