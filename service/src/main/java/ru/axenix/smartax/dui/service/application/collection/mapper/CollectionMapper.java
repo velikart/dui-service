@@ -5,9 +5,9 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import ru.axenix.smartax.dui.service.application.collection.domain.CollectionEntity;
-import ru.axenix.smartax.dui.service.application.collection.model.CollectionDto;
-import ru.axenix.smartax.dui.service.application.collection.model.CollectionHistoryDto;
-import ru.axenix.smartax.dui.service.application.collection.model.CollectionShortDto;
+import ru.axenix.smartax.dui.service.contract.model.CollectionDto;
+import ru.axenix.smartax.dui.service.contract.model.CollectionHistoryDto;
+import ru.axenix.smartax.dui.service.contract.model.CollectionShortDto;
 
 import java.time.LocalDateTime;
 import java.util.List;

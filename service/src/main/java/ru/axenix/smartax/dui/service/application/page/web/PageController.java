@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.axenix.smartax.dui.service.application.page.service.PageService;
-import ru.axenix.smartax.dui.service.application.page.model.PageDto;
+import ru.axenix.smartax.dui.service.contract.model.PageDto;
 import ru.axenix.smartax.web.swagger.annotation.BaseResponse;
 
 @RestController

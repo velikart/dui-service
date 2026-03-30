@@ -19,7 +19,6 @@ import java.util.UUID;
 /**
  * Модель для хранения страниц UI
  *
- * @author Sergey Dresvyanin.
  */
 @Getter
 @Setter

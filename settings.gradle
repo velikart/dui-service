@@ -24,8 +24,10 @@ plugins {
 }
 
 rootProject.name = 'dui-service'
-include('service', 'model', 'integration')
+include('service', 'contract', 'client', 'model', 'integration')
 
 project(':service').name = 'dui-service'
+project(':contract').name = 'dui-service-contract'
+project(':client').name = 'dui-service-client'
 project(':model').name = 'dui-service-model'
 project(':integration').name = 'dui-service-integration'

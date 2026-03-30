@@ -5,11 +5,11 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import ru.axenix.smartax.dui.service.application.template.domain.TemplateRepository;
-import ru.axenix.smartax.dui.service.application.template.service.TemplateService;
-import ru.axenix.smartax.dui.service.error.ErrorDescription;
 import ru.axenix.smartax.dui.service.application.template.model.FileDto;
-import ru.axenix.smartax.dui.service.application.template.model.TemplateDto;
-import ru.axenix.smartax.dui.service.application.template.model.TemplateFilterDto;
+import ru.axenix.smartax.dui.service.application.template.service.TemplateService;
+import ru.axenix.smartax.dui.service.contract.model.TemplateDto;
+import ru.axenix.smartax.dui.service.contract.model.TemplateFilterDto;
+import ru.axenix.smartax.dui.service.error.ErrorDescription;
 
 import java.util.List;
 import java.util.UUID;
@@ -39,11 +39,12 @@ public class TemplateServiceImpl implements TemplateService {
                 : templateRepository.findAllByType(filter.getType());
 
         return list.stream()
-                .map(it -> TemplateDto.builder()
-                        .uuid(it.getUuid())
-                        .title(it.getTitle())
-                        .imageUrl("/app/v1/template/" + it.getUuid() + "/image")
-                        .build())
+                .map(it -> {
+                    TemplateDto dto = new TemplateDto();
+                    dto.setTemplateId(it.getUuid());
+                    dto.setDescription(it.getTitle());
+                    return dto;
+                })
                 .toList();
     }
 

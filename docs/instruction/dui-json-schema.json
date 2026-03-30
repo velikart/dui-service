@@ -1,0 +1,2663 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SDI UI Configuration",
+  "description": "Монолитная спецификация JSON-конфигураций SDI-интерфейсов. Поддерживает формы, таблицы, графики, степперы, вертикальные таблицы, контент, модальные окна, древовидную навигацию (sdi-tree) и заголовки. Содержит строгие enumы и примеры конфигураций.",
+  "type": "object",
+  "$ref": "#/$defs/SDIPage",
+  "$defs": {
+    "LoaderType": {
+      "type": "string",
+      "enum": [
+        "circle",
+        "bar",
+        "skeleton"
+      ],
+      "description":"Тип отображения индикатора загрузки."
+    },
+    "Appearance": {
+      "type": "string",
+      "enum": [
+        "primary",
+        "secondary",
+        "flat",
+        "outline"
+      ],
+      "nullable": true,
+      "description":"Шаблон отрисовки кнопок."
+    },
+    "HttpMethod": {
+      "type": "string",
+      "enum": [
+        "GET",
+        "POST",
+        "PUT",
+        "DELETE",
+        "PATCH"
+      ],
+      "description":"Метод запроса."
+    },
+    "ActionName": {
+      "type": "string",
+      "enum": [
+        "submit",
+        "save",
+        "back",
+        "next",
+        "prev",
+        "create",
+        "update",
+        "delete",
+        "showComponent",
+        "hideComponent",
+        "download",
+        "reorderItem",
+        "reorderGroup",
+        "edit"
+      ],
+      "description":"Имя вшитого в систему действия. Работает только в componentAction."
+    },
+    "FilterOperator": {
+      "type": "string",
+      "enum": [
+        "EQUAL",
+        "NOT_EQUAL",
+        "LIKE",
+        "NOT_LIKE",
+        "IN",
+        "NOT_IN",
+        "GREATER",
+        "SGREATER",
+        "LESS",
+        "SLESS",
+        "BETWEEN"        
+      ],
+      "description":"Оператор сравнения: EQUAL - равно, NOT_EQUAL - не равно, LIKE - содержит строку, NOT_LIKE - не содержит строку, IN - входит в массив, NOT_IN - не входит в массив, GREATER - больше либо равно, SGREATER - строго больше, LESS - меньше либо равно, SLESS - строго меньше, BETWEEN - входит в отрезок"
+    },
+    "SDIRoute": {
+      "type": "object",
+      "required": [
+        "url"
+      ],
+      "properties": {
+        "url": {
+          "type": "string",
+          "description":"Адрес страницы или ресурса."
+        },
+        "target":{
+          "type": "string",
+          "enum":[
+            "_blank",
+            "_self"
+          ],
+          "nullable": true,
+          "description":"Способ открытия страницы или ресурса."
+        }
+      },
+      "description": "Переход на другой маршрут (client-side)."
+    },
+    "SDIDataInterface": {
+      "type": "object",
+      "properties": {
+        "input": {
+          "$ref": "#/$defs/SDIApi"
+        },
+        "output": {
+          "$ref": "#/$defs/SDIApi"
+        }
+      },
+      "description": "Контракты обмена: input (GET) и output (POST) для компонент/шагов."
+    },
+    "SDIAction":{
+      "oneOf":[
+        {
+          "$ref": "#/$defs/componentAction"
+        },
+        {
+          "$ref": "#/$defs/routeAction"
+        },
+        {
+          "$ref": "#/$defs/APIAction"
+        },
+        {
+          "$ref": "#/$defs/AlertAction"
+        },
+        {
+          "$ref": "#/$defs/ToggleAction"
+        }
+      ],
+      "description":"Действие или постдействие компонента: submit/save/back/next/prev/create/update/delete и т.п., с postAction."
+    },
+    "SDIActionBase": {
+      "type": "object",
+      "required":[
+        "title"
+      ],
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "Пользовательское название действия для отображения в UI."
+        },
+        "icon": {
+          "type": "string",
+          "description":"Имя иконки, заведенной в системе, отображаемой перед пользовательским названием действия(title)."
+        },
+        "tooltip": {
+          "type": "string",
+          "description":"Всплывающая подсказка при наведении курсора на действие."
+        },
+        "appearance": {
+          "$ref": "#/$defs/Appearance"
+        },
+        "positionX":{
+          "type":"string",
+          "enum":[
+            "left",
+            "right",
+            "center"
+          ],
+          "description":"Отвечает за положение кнопки по горизонтали. Применим к действиям в составе следующих компонентов: sdi-action-bar, sdi-content, sdi-form, sdi-modal, sdi-page-header, sdi-table. Значение center применяется только для дейтвий расположенных в sdi-modal."
+        },
+        "positionY":{
+          "type":"string",
+          "enum":[
+            "top",
+            "bottom"
+          ],
+          "description":"Отвечает за положение кнопки по вертикали. Применим к действиям в составе следующих компонентов: sdi-content, sdi-form."
+        },
+        "validate": {
+          "type": "boolean",
+          "description": "Признак, указывающий на то, что действие выполняется только когда данные (формы) валидны."
+        },
+        "disabled": {
+          "type": "boolean",
+          "description": "Свойство, отвечающее за доступность действия для нажатия пользователем."
+        },
+        "hidden": {
+          "type": "boolean",
+          "description": "Свойство, отвечающее за отображение действия пользователю."
+        },
+        "context": {
+          "type": "string",
+          "description": "Контекст выборки данных на экране для api-метода."
+        },
+        "postAction": {
+          "$ref": "#/$defs/SDIAction"
+        },
+        "effects":{
+          "type":"array",
+          "items":{
+            "allOf":[
+              {
+                "$ref": "#/$defs/SDICondition"
+              },
+              {
+                "$ref": "#/$defs/ActionEffectAftermath"
+              }
+            ]
+          },
+          "description":"Массив пар условий и эффектов, накладываемых на действие в случае выполнения условия."
+        }
+      },
+      "description": "Базовый набор свойств действия."
+    },
+    "componentAction":{
+      "allOf":[
+        {
+          "$ref": "#/$defs/SDIActionBase"
+        },
+        {
+          "type":"object",
+          "required":[
+            "name",
+            "componentName"
+          ],
+          "properties":{
+            "name":{
+              "type": "string",
+              "description":"Название действия должно совпадать с зашитым статическим действием компонента к которому выполняется обращение"
+            },
+            "componentName":{
+              "type": "string",
+              "description":"Компонент, к статическому действию которого выполняется обращение"
+            }
+          }
+        }
+      ],
+      "description": "Действие по отношению к определенному компоненту, указаному в componentName"
+    },
+    "routeAction":{
+      "allOf":[
+        {
+          "$ref": "#/$defs/SDIActionBase"
+        },
+        {
+          "type":"object",
+          "required":[
+            "name",
+            "route"
+          ],
+          "properties":{
+            "name":{
+              "type":"string",
+              "description":"Cистемное имя действия"
+            },
+            "route":{
+              "$ref": "#/$defs/SDIRoute"
+            },
+            "view":{
+              "type":"string",
+              "enum":[
+                "button",
+                "link"
+              ],
+              "default":"button",
+              "description":"Представление кнопки навигации, по умолчанию button, при link отображается, как ссылка (без заливки и обводки). "
+            }
+          }
+        }
+      ],
+      "description": "Действие для перехода на другую страницу (внутреннюю или внешнюю)"
+    },
+    "APIAction":{
+      "allOf":[
+        {
+          "type":"object",
+          "required":[
+            "name",
+            "api"
+          ],
+          "properties":{
+            "name":{
+              "type":"string",
+              "description":"Cистемное имя действия"
+            },
+            "api":{
+              "$ref": "#/$defs/SDIApi"
+            }
+          }
+        },
+        {
+          "$ref": "#/$defs/SDIActionBase"
+        }
+      ],
+      "description": "Действие для выполнения запроса к серверу"
+    },
+    "AlertAction":{
+      "allOf":[
+        {
+          "$ref": "#/$defs/SDIActionBase"
+        },
+        {
+          "type":"object",
+          "required":[
+            "message",
+            "name"
+          ],
+          "properties":{
+            "name":{
+              "type": "string",
+              "description":"Cистемное имя действия."
+            },
+            "message":{
+              "type": "string",
+              "description":"Сообщение для отобращения пользователю."
+            },
+            "status":{
+              "type": "string",
+              "enum":[
+                "info",
+                "warning",
+                "error",
+                "success"
+              ],
+              "default":"info",
+              "description":"Вид уведомления."
+            }
+          }
+        }
+      ],
+      "description": "Действие для показа нотификации пользователя о каких-либо действиях системы"
+    },
+    "ToggleAction":{
+      "allOf":[
+        {
+          "$ref": "#/$defs/SDIActionBase"
+        },
+        {
+            "oneOf":[
+            {
+              "type":"object",
+              "required":[
+                "name",
+                "initialValue"
+              ],
+              "properties":{
+                "name":{
+                  "type": "string",
+                  "default":"value",
+                  "description":"Системное имя действия"
+                },
+                "initialValue":{
+                  "type": "boolean",
+                  "description":"Значение по умолчанию"
+                }
+              }
+            },
+            {
+              "type":"object",
+              "required":[
+                "name",
+                "get",
+                "post"
+              ],
+              "properties":{
+                "name":{
+                  "type": "string",
+                  "default":"value",
+                  "description":"Системное имя действия"
+                },
+                "get":{
+                  "$ref": "#/$defs/SDIApi"
+                },
+                "post":{
+                  "$ref": "#/$defs/SDIApi"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "description": "действие, связанное с включением/выключением функциональности с помощью переключателя. Работает только в компоненте sdi-page-header"
+    },
+    "SDIPage": {
+      "type": "object",
+      "required": [
+        "title",
+        "route",
+        "layout"
+      ],
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "Название страницы в UI."
+        },
+        "route": {
+          "type": "string",
+          "description": "Маршрут (URL-путь) для показа страницы."
+        },
+        "layout": {
+          "$ref": "#/$defs/SDILayout"
+        },
+        "dataSources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SDIDataSource"
+          },
+          "description": "Определения источников данных с алиасами ds://."
+        }
+      },
+      "description": "Базовая инструкция страницы SDI: заголовок, маршрут, макет и источники данных."
+    },
+    "SDIDataSource": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Системное имя элемента. Может использоваться для ссылок из действий/эффектов."
+        },
+        "data":{}
+      },
+      "description": "Определение именованных источников данных (ds://)."
+    },
+    "SDILayout": {
+      "type": "object",
+      "required": [
+        "name",
+        "blocks"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "enum": [
+            "layout-simple",
+            "layout-1col",
+            "layout-2col",
+            "layout-3col"
+          ],
+          "description": "Имя шаблона макета из enum."
+        },
+        "blocks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SDIBlock"
+          },
+          "description": "Массив блоков в рамках выбранного макета."
+        }
+      },
+      "description": "Макет страницы. Определяет расположение блоков и шаблон"
+    },
+    "SDINavigation":{
+      "type": "array",
+      "items":{
+        "type": "object",
+        "properties":{
+          "title":{
+            "type":"string",
+            "description":"Пользовательское наименование раздела / страницы, отображаемое на UI."
+          },
+          "icon":{
+            "type":"string",
+            "description":"Системное название иконки."
+          },
+          "route":{
+            "type":"string",
+            "description":"Путь до страницы."
+          },
+          "subPages":{
+            "$ref": "#/$defs/SDINavigation"
+          }
+        }
+      },
+      "description":"Инструкция для описания навигации."
+    },
+    "SDIBlock": {
+      "type": "object",
+      "required": [
+        "name",
+        "components"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "enum": [
+            "main",
+            "col1",
+            "col2",
+            "col3"
+          ],
+          "description": "Выбор макета блока"
+        },
+        "components": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Component"
+          },
+          "description": "Компоненты, размещаемые в блоке."
+        },
+        "colSpan": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 12,
+          "description": "Ширина блока в 12-колоночной сетке (1, ..., 12)."
+        }
+      },
+      "description": "Блок макета, содержащий компоненты. Может иметь colSpan в 12-колоночной сетке."
+    },
+    "Component": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/SDIPageHeader"
+        },
+        {
+          "$ref": "#/$defs/SDITree"
+        },
+        {
+          "$ref": "#/$defs/SDIModal"
+        },
+        {
+          "$ref": "#/$defs/SDIForm"
+        },
+        {
+          "$ref": "#/$defs/SDITable"
+        },
+        {
+          "$ref": "#/$defs/SDIChartAPEX"
+        },
+        {
+          "$ref": "#/$defs/SDIChartTUI"
+        },
+        {
+          "$ref": "#/$defs/SDIStepper"
+        },
+        {
+          "$ref": "#/$defs/SDIVerticalTable"
+        },
+        {
+          "$ref": "#/$defs/SDIContent"
+        },
+        {
+          "$ref": "#/$defs/SDILayoutContent"
+        },
+        {
+          "$ref": "#/$defs/SDIActionBar"
+        },
+        {
+          "$ref": "#/$defs/SDIFilter"
+        },
+        {
+          "$ref": "#/$defs/SDISummary"
+        }
+      ],
+      "discriminator": {
+        "propertyName": "selector",
+        "mapping": {
+          "sdi-filter": "#/$defs/SDIFilter",
+          "sdi-page-header": "#/$defs/SDIPageHeader",
+          "sdi-tree": "#/$defs/SDITree",
+          "sdi-modal": "#/$defs/SDIModal",
+          "sdi-form": "#/$defs/SDIForm",
+          "sdi-table": "#/$defs/SDITable",
+          "sdi-chart-apex": "#/$defs/SDIChartAPEX",
+          "sdi-chart-tui": "#/$defs/SDIChartTUI",
+          "sdi-stepper": "#/$defs/SDIStepper",
+          "sdi-vertical-table": "#/$defs/SDIVerticalTable",
+          "sdi-content": "#/$defs/SDIContent",
+          "sdi-layout-content": "#/$defs/SDILayoutContent",
+          "sdi-action-bar": "#/$defs/SDIActionBar",
+          "sdi-summary": "#/$defs/SDISummary"
+        }
+      }
+    },
+    "SDIActionBar":{
+      "type": "object",
+      "properties":{
+        "selector":{
+          "type": "string",
+          "enum":[
+            "sdi-action-bar"
+          ]
+        },
+        "actions":{
+          "$ref": "#/$defs/SDIAction"
+        },
+        "hiddenActions": {
+          "$ref": "#/$defs/SDIAction"
+        },
+        "direction":{
+          "type": "string",
+          "enum":[
+            "row",
+            "column"
+          ]
+        },
+        "loader": {
+          "$ref": "#/$defs/LoaderType"
+        },
+        "showLoader": {
+          "type": "boolean",
+          "description": "Показывать/скрывать индикатор загрузки."
+        }
+      }
+    },
+    "SDIPageHeader": {
+      "type": "object",
+      "required": [
+        "selector",
+        "title"
+      ],
+      "properties": {
+        "selector": {
+          "type": "string",
+          "enum": [
+            "sdi-page-header"
+          ],
+          "description": "Определяет тип компонента SDI (например, sdi-form, sdi-table, sdi-content, sdi-modal и т.д.)."
+        },
+        "name": {
+          "type": "string",
+          "description": "Системное имя элемента. Может использоваться для ссылок из действий/эффектов."
+        },
+        "title": {
+          "type": "string",
+          "description": "Пользовательский заголовок/подпись для отображения в UI."
+        },
+        "showBack": {
+          "type": "boolean",
+          "description": "Показывать кнопку «Назад»."
+        },
+        "showLogout": {
+          "type": "boolean",
+          "description": "Показывать кнопку «Выйти»."
+        },
+        "actions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SDIAction"
+          },
+          "description": "Основные действия в шапке."
+        },
+        "hiddenActions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SDIAction"
+          },
+          "description": "Дополнительные/скрытые действия (меню)."
+        },
+        "loader": {
+          "$ref": "#/$defs/LoaderType"
+        },
+        "showLoader": {
+          "type": "boolean",
+          "description": "Показывать/скрывать индикатор загрузки."
+        }
+      },
+      "description": "Шапка страницы: заголовок, кнопки, скрытые и динамические действия, back."
+    },
+    "SDITree": {
+      "type": "object",
+      "required": [
+        "selector",
+        "children"
+      ],
+      "properties": {
+        "selector": {
+          "type": "string",
+          "enum": [
+            "sdi-tree"
+          ],
+          "description": "Определяет тип компонента SDI (например, sdi-form, sdi-table, sdi-content, sdi-modal и т.д.)."
+        },
+        "name": {
+          "type": "string"
+        },
+        "isCollapsed": {
+          "type": "boolean"
+        },
+        "template": {
+          "type": "string",
+          "enum": [
+            "tab",
+            "menu"
+          ],
+          "default": "tab",
+          "description": "Режим визуализации: tab (вкладки) либо menu (дерево/меню)."
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/TreeNode"
+          },
+          "description": "Список узлов дерева (TreeNode)."
+        },
+        "loader": {
+          "$ref": "#/$defs/LoaderType"
+        },
+        "showLoader": {
+          "type": "boolean",
+          "description": "Показывать/скрывать индикатор загрузки."
+        }
+      },
+      "description": "Дерево с вкладками/меню (замена SDITab)."
+    },
+    "TreeNode": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Системное имя элемента. Может использоваться для ссылок из действий/эффектов."
+        },
+        "title": {
+          "type": "string",
+          "description": "Пользовательский заголовок/подпись для отображения в UI."
+        },
+        "icon": {
+          "type": "string"
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "isCollapsed": {
+          "type": "boolean"
+        },
+        "children": {
+          "type": "array",
+          "items":{
+            "$ref": "#/$defs/TreeNode"
+          }
+        },
+        "components": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Component"
+          },
+          "description": "Список вложенных компонентов для отрисовки."
+        },
+        "layout": {
+          "$ref": "#/$defs/SDILayout"
+        }
+      },
+      "description": "Узел дерева (вкладка/пункт меню). Содержит собственные компоненты или SDILayout."
+    },
+    "SDIModal": {
+      "type": "object",
+      "properties": {
+        "selector": {
+          "type": "string",
+          "enum": [
+            "sdi-modal"
+          ],
+          "description": "Определяет тип компонента SDI (например, sdi-form, sdi-table, sdi-content, sdi-modal и т.д.)."
+        },
+        "name": {
+          "type": "string",
+          "description": "Системное имя элемента. Может использоваться для ссылок из действий/эффектов."
+        },
+        "title": {
+          "type": "string",
+          "description": "Пользовательский заголовок/подпись для отображения в UI."
+        },
+        "isHidden": {
+          "type": "boolean"
+        },
+        "actions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SDIAction"
+          },
+          "description": "Кнопки в футере модального окна."
+        },
+        "components": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Component"
+          },
+          "description": "Список вложенных компонентов для отрисовки."
+        },
+        "layout": {
+          "type":"string"
+        },
+        "loader": {
+          "$ref": "#/$defs/LoaderType"
+        },
+        "showLoader": {
+          "type": "boolean",
+          "description": "Показывать/скрывать индикатор загрузки."
+        }
+      },
+      "description": "Модальное окно с внутренними компонентами и действиями."
+    },
+    "SDIContent": {
+      "type": "object",
+      "required": [
+        "selector",
+        "name",
+        "title",
+        "content"
+      ],
+      "properties": {
+        "selector": {
+          "type": "string",
+          "enum": [
+            "sdi-content"
+          ],
+          "description": "Компонент для отображение текстового или HTML контента."
+        },
+        "name": {
+          "type": "string",
+          "description": "Системное имя компонента, уникальное в рамках страницы."
+        },
+        "title": {
+          "type": "string",
+          "description": "Наименование заголовка/подпись для отображения в UI."
+        },
+        "content": {
+          "type": "string"
+        },
+        "api":{
+          "$ref": "#/$defs/SDIApi"
+        },
+        "actions":{
+          "$ref": "#/$defs/SDIAction"
+        },
+        "loader": {
+          "$ref": "#/$defs/LoaderType"
+        },
+        "showLoader": {
+          "type": "boolean",
+          "description": "Показывать/скрывать индикатор загрузки."
+        }
+      },
+      "description": "Текстовый/HTML-контент. Используется для заголовков разделов и пояснений."
+    },
+    "SDIForm": {
+      "type": "object",
+      "required": [
+        "selector",
+        "fields"
+      ],
+      "properties": {
+        "selector": {
+          "type": "string",
+          "enum": [
+            "sdi-form"
+          ],
+          "description": "Определяет тип компонента SDI (например, sdi-form, sdi-table, sdi-content, sdi-modal и т.д.)."
+        },
+        "name": {
+          "type": "string",
+          "description": "Системное имя элемента. Может использоваться для ссылок из действий/эффектов."
+        },
+        "template": {
+          "type": "string",
+          "enum":[
+            "two-columns",
+            "three-columns"
+          ],
+          "description": "Одноколоночная форма по умолчанию или two/three-columns."
+        },
+        "dataInterface": {
+          "$ref": "#/$defs/SDIDataInterface"
+        },
+        "fileApi": {
+          "type": "object",
+          "properties": {
+            "get": {
+              "$ref": "#/$defs/SDIApi"
+            },
+            "post": {
+              "$ref": "#/$defs/SDIApi"
+            }
+          },
+          "description": "Эндпоинты для загрузки/чтения файлов."
+        },
+        "api": {
+          "$ref": "#/$defs/SDIApi"
+        },
+        "actions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SDIAction"
+          },
+          "description": "Массив действий (кнопки, контекстные операции). Поддерживает API/route/alert/toggle и postAction."
+        },
+        "fields": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/SDIField"
+          },
+          "description": "Массив полей формы."
+        },
+        "loader": {
+          "$ref": "#/$defs/LoaderType"
+        },
+        "showLoader": {
+          "type": "boolean",
+          "description": "Показывать/скрывать индикатор загрузки."
+        }
+      },
+      "description": "Форма: поля, валидации, эффекты, действия, API и работа с файлами."
+    },
+    "SDITable": {
+      "type": "object",
+      "required": [
+        "selector",
+        "api",
+        "columns"
+      ],
+      "properties": {
+        "selector": {
+          "type": "string",
+          "enum": [
+            "sdi-table"
+          ],
+          "description": "Определяет тип компонента SDI (например, sdi-form, sdi-table, sdi-content, sdi-modal и т.д.)."
+        },
+        "name": {
+          "type": "string",
+          "description": "Системное имя элемента. Может использоваться для ссылок из действий/эффектов."
+        },
+        "api": {
+          "$ref": "#/$defs/SDIApi"
+        },
+        "rowClickable": {
+          "type": "boolean"
+        },
+        "tableView":{
+          "type":"object",
+          "properties":{
+            "headerHight":{
+              "type":"string",
+              "pattern":"^\\d+(px|rem)$",
+              "description": "Высота заголовка в px или rem."
+            },
+            "template": {
+              "type": "string",
+              "enum":[
+                "card",
+                "sheet",
+                "excel"
+              ],
+              "description": "Шаблон отрисовки таблицы."
+            }
+          }
+        },
+        "pageable":{
+          "type":"object",
+          "properties":{
+            "limit": {
+              "type": "integer",
+              "description": "Ограничение числа записей на страницу или видимых элементов."
+            }
+          }
+        },
+        "sort": {
+          "$ref": "#/$defs/SDITableSort"
+        },
+        "filter": {
+          "localSearch":{
+            "type":"boolean",
+            "description":"Отвечает за использование локальной или серверной фильтрации. Если используется пагинация данных, то используется только серверная фильтрация",
+            "default":false
+          },
+          "quickSearch":{
+            "type":"boolean"
+          },
+          "static":{
+            "$ref": "#/$defs/SDIFilterStaticField"
+          },
+          "advanced":{
+            "$ref": "#/$defs/SDIFilterAdvancedField"
+          },
+          "custom":{
+            "$ref": "#/$defs/SDIFilterCustomField"
+          },
+          "description": "Схема фильтров таблицы (static/advanced/modifiers)."
+        },
+        "actions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SDIAction"
+          },
+          "description": "Массив действий (кнопки, контекстные операции). Поддерживает API/route/alert/toggle и postAction."
+        },
+        "columns": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SDITableColumn"
+          },
+          "description": "Колонки таблицы."
+        },
+        "group":{
+          "type":"object",
+          "properties":{
+            "by": {
+              "type": "string",
+              "description": "Строка, указывающая на поле, по которому осуществляется группировка."
+            },
+            "prefix": {
+              "type": "string",
+              "description": "Префикс названия группировки - опциональное. Если не указывать, подставляется \"Группа\"."
+            }
+          }
+        },
+        "isDragAndDrop":{
+          "type":"boolean"
+        },
+        "loader": {
+          "$ref": "#/$defs/LoaderType"
+        },
+        "showLoader": {
+          "type": "boolean",
+          "description": "Показывать/скрывать индикатор загрузки."
+        }
+      },
+      "description": "Таблица/реестр: колонки, сортировка, фильтры (static/advanced/modifiers), действия, пагинация."
+    },
+    "SDIChartTUI": {
+      "type": "object",
+      "required": [
+        "selector",
+        "type",
+        "api"
+      ],
+      "properties": {
+        "selector": {
+          "type": "string",
+          "enum": [
+            "sdi-chart-tui"
+          ],
+          "description": "Определяет тип компонента SDI (например, sdi-form, sdi-table, sdi-content, sdi-modal и т.д.)."
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "line-chart"
+          ]
+        },
+        "api": {
+          "$ref": "#/$defs/SDIApi"
+        },
+        "filter": {
+          "$ref": "#/$defs/SDIChartFilter"
+        },
+        "loader": {
+          "$ref": "#/$defs/LoaderType"
+        },
+        "showLoader": {
+          "type": "boolean",
+          "description": "Показывать/скрывать индикатор загрузки."
+        }
+      },
+      "description": "График tui: line-chart. Поддержка фильтров и действий."
+    },
+    "SDIChartAPEX": {
+      "type": "object",
+      "required": [
+        "selector",
+        "type",
+        "api"
+      ],
+      "properties": {
+        "selector": {
+          "type": "string",
+          "enum": [
+            "sdi-chart-apex"
+          ],
+          "description": "Определяет тип компонента SDI (например, sdi-form, sdi-table, sdi-content, sdi-modal и т.д.)."
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "bar-column",
+            "scatter",
+            "histogram",
+            "pie"
+          ]
+        },
+        "api": {
+          "$ref": "#/$defs/SDIApi"
+        },
+        "filter": {
+          "$ref": "#/$defs/SDIChartFilter"
+        },
+        "loader": {
+          "$ref": "#/$defs/LoaderType"
+        },
+        "showLoader": {
+          "type": "boolean",
+          "description": "Показывать/скрывать индикатор загрузки."
+        }
+      },
+      "description": "График apex: bar-column, scatter, histogram. Поддержка фильтров и действий."
+    },
+    "SDIStepper": {
+      "type": "object",
+      "required": [
+        "selector",
+        "steps"
+      ],
+      "properties": {
+        "selector": {
+          "type": "string",
+          "enum": [
+            "sdi-stepper"
+          ],
+          "description": "Определяет тип компонента SDI (например, sdi-form, sdi-table, sdi-content, sdi-modal и т.д.)."
+        },
+        "name": {
+          "type": "string",
+          "description": "Системное имя элемента. Может использоваться для ссылок из действий/эффектов."
+        },
+        "dataInterface": {
+          "$ref": "#/$defs/SDIDataInterface"
+        },
+        "actions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SDIAction"
+          },
+          "description": "Массив действий (кнопки, контекстные операции). Поддерживает API/route/alert/toggle и postAction."
+        },
+        "steps": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SDIStep"
+          },
+          "description": "Последовательность шагов мастера."
+        },
+        "loader": {
+          "$ref": "#/$defs/LoaderType"
+        },
+        "showLoader": {
+          "type": "boolean",
+          "description": "Показывать/скрывать индикатор загрузки."
+        }
+      },
+      "description": "Данный компонент служит для описания отрисовки пошагового ввода данных."
+    },
+    "SDISummary": {
+      "type": "object",
+      "required": [
+        "selector"
+      ],
+      "properties": {
+        "selector": {
+          "type": "string",
+          "enum": [
+            "sdi-summary"
+          ],
+          "description": "Определяет тип компонента SDI (например, sdi-form, sdi-table, sdi-content, sdi-modal и т.д.)."
+        },
+        "name": {
+          "type": "string",
+          "description": "Системное имя элемента. Может использоваться для ссылок из действий/эффектов."
+        },
+        "api": {
+          "$ref": "#/$defs/SDIApi"
+        },
+        "columns":{
+          "type":"object",
+          "properties":{
+            "total":{
+              "$ref": "#/$defs/SDISummaryItem"
+            },
+            "items":{
+              "type":"array",
+              "items":{
+                "$ref": "#/$defs/SDISummaryItem"
+              }
+            }
+          }
+        },
+        "loader": {
+          "$ref": "#/$defs/LoaderType"
+        },
+        "showLoader": {
+          "type": "boolean",
+          "description": "Показывать/скрывать индикатор загрузки."
+        }
+      },
+      "description": ""
+    },
+    "SDISummaryItem":{
+      "type": "object",
+      "properties":{
+        "title": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum":[
+            "string",
+            "number",
+            "decimal",
+            "date",
+            "DatePeriod",
+            "boolean",
+            "image"
+          ]
+        }
+      }
+    },
+    "SDIStep": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Системное имя элемента. Может использоваться для ссылок из действий/эффектов."
+        },
+        "title": {
+          "type": "string",
+          "description": "Пользовательский заголовок/подпись для отображения в UI."
+        },
+        "api": {
+          "$ref": "#/$defs/SDIApi"
+        },
+        "components": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Component"
+          },
+          "description": "Компоненты конкретного шага."
+        }
+      }
+    },
+    "SDIVerticalTable": {
+      "type": "object",
+      "required": [
+        "selector",
+        "columns"
+      ],
+      "properties": {
+        "selector": {
+          "type": "string",
+          "enum": [
+            "sdi-vertical-table"
+          ],
+          "description": "Определяет тип компонента SDI (например, sdi-form, sdi-table, sdi-content, sdi-modal и т.д.)."
+        },
+        "name": {
+          "type": "string",
+          "description": "Системное имя элемента. Может использоваться для ссылок из действий/эффектов."
+        },
+        "api": {
+          "$ref": "#/$defs/SDIApi"
+        },
+        "dataInterface": {
+          "$ref": "#/$defs/SDIDataInterface"
+        },
+        "hideNoValueColumn": {
+          "type": "boolean"
+        },
+        "actions":{
+          "type":"array",
+          "items":{
+            "$ref": "#/$defs/SDIAction"
+          }
+        },
+        "columns": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SDITableColumn"
+          },
+          "description": "Список колонок таблицы."
+        },
+        "loader": {
+          "$ref": "#/$defs/LoaderType"
+        },
+        "showLoader": {
+          "type": "boolean",
+          "description": "Показывать/скрывать индикатор загрузки."
+        }
+      },
+      "description": "Вертикальная таблица (key-value). Может работать от API или SDIDataInterface."
+    },
+    "SDITableSort": {
+      "type": "object",
+      "properties": {
+        "isLocal":{
+          "type":"boolean",
+          "description":"Отвечает за использование локальной или серверной сортировки. Если используется пагинация данных, то используется только серверная сортировка",
+          "default":false
+        },
+        "columns": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SortColumn"
+          },
+          "description": "Массив с описанием полей, по которым можно сортировать данные."
+        }
+      },
+      "description": "Конфигурация сортировки таблицы."
+    },
+    "SortColumn": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Системное имя элемента. Может использоваться для ссылок из действий/эффектов."
+        },
+        "title": {
+          "type": "string",
+          "description": "Пользовательский заголовок/подпись для отображения в UI."
+        }
+      },
+      "description": "Колонка сортировки (name/title)."
+    },
+    "SDIFieldValidator": {
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "required",
+            "minLength",
+            "maxLength"
+          ]
+        },
+        "length": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "description": "Валидатор поля: required|minLength|maxLength."
+    },
+    "SDIConditionPredicate": {
+      "type": "object",
+      "required": [
+        "property",
+        "operator",
+        "value"
+      ],
+      "properties": {
+        "property": {
+          "type": "string",
+          "description":"Имя проверяемого свойства ()."
+        },
+        "operator": {
+          "$ref": "#/$defs/FilterOperator"
+        },
+        "value": {},
+        "description":"Значение / значения для сравнения."
+      },
+      "description": "Предикат условия."
+    },
+    "SDICondition": {
+      "type": "object",
+      "required": [
+        "operator",
+        "predicates"
+      ],
+      "properties": {
+        "operator": {
+          "type": "string",
+          "enum": [
+            "AND",
+            "OR",
+            "NOT"
+          ],
+          "description":"Логический оператор для работы с условиями."
+        },
+        "predicates": {
+          "type":"array",
+            "items":{
+              "oneOf":[
+                {
+                  "$ref": "#/$defs/SDICondition"
+                },
+                {
+                  "$ref": "#/$defs/SDIConditionPredicate"
+                }
+              ]
+            },
+          "description":"Массив предикатов, либо вложенных условий."
+        }
+      },
+      "description": "Комбинация предикатов логическими операторами AND/OR/NOT."
+    },
+    "ActionEffectAftermath": {
+      "type": "object",
+      "properties": {
+        "isHidden": {
+          "type": "boolean",
+          "description":"Отвечает за отображение / сокрытие действия на экране."
+        },
+        "isDisabled": {
+          "type": "boolean",
+          "description":"Отвечает за возможность выполнения действия пользователем."
+        }
+      },
+      "description": "Результат эффекта: скрыть/заблокировать действие."
+    },
+    "SDIAftermath": {
+      "type": "object",
+      "properties": {
+        "isHidden": {
+          "type": "boolean"
+        },
+        "isDisabled": {
+          "type": "boolean"
+        },
+        "isReadonly": {
+          "type": "boolean"
+        },
+        "applyContext": {
+          "type": "string"
+        },
+        "value": {}
+      },
+      "description": "Результат эффекта: скрыть/заблокировать/сделать readonly/установить значение."
+    },
+    "SDIFieldEffect": {
+      "type": "object",
+      "required": [
+        "condition",
+        "aftermath"
+      ],
+      "properties": {
+        "root": {
+          "type": "string"
+        },
+        "condition": {
+          "$ref": "#/$defs/SDICondition"
+        },
+        "aftermath": {
+          "$ref": "#/$defs/SDIAftermath"
+        }
+      },
+      "description": "Правило эффекта: condition + aftermath (+root для кросс-форменных ссылок)."
+    },
+    "SelectOption": {
+      "type": "object",
+      "properties": {
+        "id": {},
+        "name": {
+          "type": "string",
+          "description": "Системное имя элемента. Может использоваться для ссылок из действий/эффектов."
+        },
+        "group": {
+          "type": "string"
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SelectOption"
+          },
+          "description": "Дочерние узлы (например, для SDITree)."
+        }
+      }
+    },
+    "SDIFieldBase": {
+      "type": "object",
+      "required": [
+        "name",
+        "title"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Системное имя элемента. Может использоваться для ссылок из действий/эффектов."
+        },
+        "title": {
+          "type": "string",
+          "description": "Пользовательский заголовок/подпись для отображения в UI."
+        },
+        "isPrimary": {
+          "type": "boolean"
+        },
+        "isHidden": {
+          "type": "boolean"
+        },
+        "isReadonly": {
+          "type": "boolean"
+        },
+        "isDisabled": {
+          "type": "boolean"
+        },
+        "validators": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SDIFieldValidator"
+          }
+        },
+        "effects": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SDIFieldEffect"
+          }
+        },
+        "trimSymbols":{
+          "type":"array",
+          "items":{
+            "type":"string"
+          }
+        },
+        "editorMode":{
+          "type":"string",
+          "enum":[
+            "simple",
+            "regular",
+            "full"
+          ]
+        }
+      },
+      "description": "Базовые свойства поля: name, title, видимость, валидаторы, эффекты."
+    },
+    "SDIFieldDateTime": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/SDIFieldBase"
+        },
+        {
+          "type": "object",
+          "required":[
+            "type"
+          ],
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": [
+                "datetime"
+              ]
+            },
+            "dateMode": {
+              "type": "string",
+              "enum": [
+                "HH:MM",
+                "HH:MM:SS",
+                "HH:MM:SS.MSS"
+              ]
+            }
+          }
+        }
+      ],
+      "description": "Поле даты/даты-времени с режимами HH:MM и HH:MM:SS."
+    },
+    "SDIFieldDateRange": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/SDIFieldBase"
+        },
+        {
+          "type": "object",
+          "required":[
+            "type"
+          ],
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": [
+                "daterange"
+              ]
+            },
+            "default": {
+              "type": "object",
+              "properties": {
+                "from": {
+                  "type": "string"
+                },
+                "to": {
+                  "type": "string"
+                }
+              }
+            },
+            "showIntervals":{
+              "type":"string",
+              "enum":[
+                "past",
+                "future"
+              ]
+            },
+            "min":{
+              "type":"string"
+            },
+            "max":{
+              "type":"string"
+            }
+          }
+        }
+      ],
+      "description": "Поле диапазона дат с rangeType (Month|Day) и default {from,to}."
+    },
+    "SDIFieldFile": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/SDIFieldBase"
+        },
+        {
+          "type": "object",
+          "required":[
+            "type"
+          ],
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": [
+                "file"
+              ]
+            },
+            "link": {
+              "type": "string"
+            },
+            "label": {
+              "type": "string"
+            },
+            "accept": {
+              "type": "string"
+            },
+            "multiple": {
+              "type": "boolean"
+            },
+            "maxFileSize": {
+              "type": "integer"
+            }
+          }
+        }
+      ],
+      "description": "Поле file. Поддерживает accept, подписи и ссылки."
+    },
+    "SDIFieldImage": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/SDIFieldBase"
+        },
+        {
+          "type": "object",
+          "required":[
+            "type"
+          ],
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": [
+                "image"
+              ]
+            },
+            "link": {
+              "type": "string"
+            },
+            "label": {
+              "type": "string"
+            },
+            "accept": {
+              "type": "string"
+            },
+            "width": {
+              "type": "string"
+            },
+            "height": {
+              "type": "string"
+            }
+          }
+        }
+      ],
+      "description": "Поле image. Поддерживает accept, подписи и ссылки."
+    },
+    "SDIFieldSelect": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/SDIFieldBase"
+        },
+        {
+          "type": "object",
+          "required":[
+            "type"
+          ],
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": [
+                "select"
+              ]
+            },
+            "default":{},
+            "multiple":{
+              "type": "boolean"
+            },
+            "grouping":{
+              "type": "boolean"
+            },
+            "options":{
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/SelectOption"
+              }
+            },
+            "api":{
+              "$ref": "#/$defs/SDIApi"
+            },
+            "actions":{
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/SDIAction"
+              }
+            }
+          }
+        }
+      ],
+      "description": "Поле select. Поддерживает multiple, grouping, options и загрузку по api."
+    },
+    "SDIFieldTableTree": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/SDIFieldBase"
+        },
+        {
+          "type": "object",
+          "required":[
+            "type",
+            "fields"
+          ],
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": [
+                "table-tree"
+              ]
+            },
+            "fields": {
+              "type": "array",
+              "minItems": 3,
+              "maxItems": 3,
+              "items": {
+                "$ref": "#/$defs/SDIField"
+              }
+            }
+          }
+        }
+      ],
+      "description": "Поле table-tree: дерево записей со схемой полей."
+    },
+    "SDIFieldFieldSet": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/SDIFieldBase"
+        },
+        {
+          "type": "object",
+          "required":[
+            "type",
+            "fields"
+          ],
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": [
+                "fieldset"
+              ]
+            },
+            "default":{},
+            "fields": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/SDIField"
+              }
+            }
+          }
+        }
+      ],
+      "description": "Группа полей (fieldset) для логической группировки."
+    },
+    "SDIFieldCustomFieldSet": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/SDIFieldBase"
+        },
+        {
+          "type": "object",
+          "required":[
+            "type",
+            "fields"
+          ],
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": [
+                "custom-field-set"
+              ]
+            },
+            "fields": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/SDIField"
+              }
+            }
+          }
+        }
+      ],
+      "description": "Набор «кастомных полей» с разными типами и валидаторами."
+    },
+    "SDIField": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/SDIFieldCommon"
+        },
+        {
+          "$ref": "#/$defs/SDIFieldNumber"
+        },
+        {
+          "$ref": "#/$defs/SDIFieldTextarea"
+        },
+        {
+          "$ref": "#/$defs/SDIFieldDateTime"
+        },
+        {
+          "$ref": "#/$defs/SDIFieldSelect"
+        },
+        {
+          "$ref": "#/$defs/SDIFieldFieldSet"
+        },
+        {
+          "$ref": "#/$defs/SDIFieldFile"
+        },
+        {
+          "$ref": "#/$defs/SDIFieldImage"
+        },
+        {
+          "$ref": "#/$defs/SDIFieldDateRange"
+        },
+        {
+          "$ref": "#/$defs/SDIFieldTableTree"
+        },
+        {
+          "$ref": "#/$defs/SDIFieldCustomFieldSet"
+        },
+        {
+          "$ref": "#/$defs/SDIFieldExpand"
+        }
+      ],
+      "discriminator": {
+        "propertyName": "type"
+      },
+      "description": "Поле формы. Дискриминируется по type: string / select / date / daterange / file / image / fieldset / custom-field-set и др."
+    },
+    "SDIFieldCommon":{
+      "allOf":[
+        {
+          "$ref": "#/$defs/SDIFieldBase"
+        },
+        {
+          "type":"object",
+          "required":[
+            "type"
+          ],
+          "properties":{
+            "type":{
+              "type":"string",
+              "enum":[
+
+              ]
+            },
+            "default":{}
+          }
+        }
+      ]
+    },
+    "SDIFieldNumber":{
+      "allOf":[
+        {
+          "$ref": "#/$defs/SDIFieldBase"
+        },
+        {
+          "type":"object",
+          "required":[
+            "type"
+          ],
+          "properties":{
+            "type":{
+              "type":"string",
+              "enum":[
+                "number",
+                "decimal",
+                "money"
+              ]
+            },
+            "default":{},
+            "min":{
+              "type":"integer"
+            },
+            "max":{
+              "type":"integer"
+            },
+            "precision":{
+              "type":"integer"
+            },
+            "prefix":{
+              "type":"string"
+            },
+            "postfix":{
+              "type":"string"
+            }
+          }
+        }
+      ]
+    },
+    "SDIFieldTextarea":{
+      "allOf":[
+        {
+          "$ref": "#/$defs/SDIFieldBase"
+        },
+        {
+          "type":"object",
+          "required":[
+            "type"
+          ],
+          "properties":{
+            "type":{
+              "type":"string",
+              "enum":[
+                "textarea"
+              ]
+            },
+            "default":{},
+            "rows":{
+              "type":"integer"
+            },
+            "cleanable":{
+              "type":"boolean"
+            },
+            "textAreaType":{
+              "type":"string",
+              "enum":[
+                "phone",
+                "null"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "SDIFieldExpand":{
+      "allOf":[
+        {
+          "$ref": "#/$defs/SDIFieldBase"
+        },
+        {
+          "type":"object",
+          "required":[
+            "type"
+          ],
+          "properties":{
+            "type":{
+              "type":"string",
+              "enum":[
+                "expand"
+              ]
+            },
+            "default":{},
+            "api":{
+              "$ref": "#/$defs/SDIApi"
+            },
+            "options":{
+              "type":"array",
+              "items":{
+                "type":"object",
+                "properties":{
+                  "unitId":{
+                    "type":"string"
+                  },
+                  "unitName":{
+                    "type":"string"
+                  },
+                  "expanded":{
+                    "type":"boolean"
+                  },
+                  "apiMethods":{
+                    "type":"array",
+                    "items":{
+                      "type":"object",
+                      "properties":{
+                        "id":{
+                          "type":"integer"
+                        },
+                        "name":{
+                          "type":"string"
+                        },
+                        "allow":{
+                          "type":"boolean"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "map":{
+              "type": "object",
+              "properties":{
+                "title":{
+                  "type":"string"
+                },
+                "parentTitle":{
+                  "type":"string"
+                },
+                "selected":{
+                  "type":"string"
+                },
+                "children":{
+                  "type":"string"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "SDILayoutContent": {
+      "type": "object",
+      "required": [
+        "selector",
+        "content"
+      ],
+      "properties": {
+        "selector": {
+          "type": "string",
+          "enum": [
+            "sdi-layout-content"
+          ],
+          "description": "Определяет тип компонента SDI (например, sdi-form, sdi-table, sdi-content, sdi-modal и т.д.)."
+        },
+        "name": {
+          "type": "string",
+          "description": "Пользовательское уникальное (для страницы) имя компонента"
+        },
+        "content": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/LayoutContentConfig"
+          }
+        },
+        "loader": {
+          "$ref": "#/$defs/LoaderType"
+        },
+        "showLoader": {
+          "type": "boolean",
+          "description": "Показывать/скрывать индикатор загрузки."
+        }
+      },
+      "description": "Вставка вложенных layout'ов в поток страницы (контейнер для layout-* блоков)."
+    },
+    "LayoutContentConfig":{
+      "type": "object",
+      "required": [
+        "name",
+        "layout"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "content":{
+          "type":"array",
+          "items":{
+            "$ref": "#/$defs/LayoutContentConfig"
+          }
+        },
+        "layout": {
+          "$ref": "#/$defs/SDILayout"
+        },
+        "components": {
+          "type": "array",
+          "items":{
+            "$ref": "#/$defs/Component"
+          }
+        }
+      }
+    },
+    "SDIApi": {
+      "type": "object",
+      "required": [
+        "url",
+        "method"
+      ],
+      "properties": {
+        "url": {
+          "type": "string",
+          "description":"end-point.Также в url можно указывать переменные, которые будут подставляться в адресную строку клиента"
+        },
+        "method": {
+          "$ref": "#/$defs/HttpMethod"
+        },
+        "args": {
+          "type": "object",
+          "description":"Набор аргументов ключ-значение."
+        },
+        "download": {
+          "type": "boolean",
+          "description":"При значении true полученный контент будет отправлен на скачивание клиентом, заголовки ответа должны содержать Content-Disposition."
+        }
+      },
+      "description": "Строгое описание эндпоинта SDI."
+    },
+    "SDIImage": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string"
+        },
+        "width": {
+          "type": "integer",
+          "nullable": true
+        },
+        "height": {
+          "type": "integer",
+          "nullable": true
+        },
+        "title": {
+          "type": "string",
+          "nullable": true,
+          "description": "Пользовательский заголовок/подпись для отображения в UI."
+        }
+      },
+      "required": [
+        "url"
+      ],
+      "description": "Модель изображения (url/width/height/title)."
+    },
+    "SDITableColumn": {
+      "type": "object",
+      "required": [
+        "name",
+        "title",
+        "type"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Системное имя элемента. Может использоваться для ссылок из действий/эффектов."
+        },
+        "title": {
+          "type": "string",
+          "description": "Пользовательский заголовок/подпись для отображения в UI."
+        },
+        "type": {
+          "type": "string",
+          "enum":[
+            "number",
+            "decimal",
+            "string",
+            "boolean",
+            "select",
+            "image",
+            "datePeriod",
+            "toggle",
+            "html"
+          ],
+          "description": "Тип данных колонки таблицы."
+        },
+        "isPrimary": {
+          "type": "boolean"
+        },
+        "isHidden": {
+          "type": "boolean"
+        },
+        "isVerticalOrientation": {
+          "type": "boolean"
+        },
+        "api":{
+          "$ref": "#/$defs/SDIApi"
+        },
+        "width": {
+          "type": "string",
+          "pattern":"^\\d+(px|rem)$",
+          "description": "Фиксированная ширина столбца."
+        },
+        "overflow": {
+          "type": "boolean"
+        },
+        "emptyValue": {
+          "type": "string",
+          "description": "Если установлена, то подставляется вместо пустого значения в колонке с типами строчного представления (string, date)."
+        },
+        "colorHead": {
+          "type": "string",
+          "description": "Цвет заливки заголовка колонки таблицы (в форматах HEX или RGB)."
+        },
+        "options":{
+          "type":"array",
+          "items":{
+            "type":"object",
+            "properties":{
+              "id":{
+                "type":"string"
+              },
+              "name":{
+                "type":"string"
+              }
+            }
+          }
+        }
+      },
+      "description": "Совместимая модель колонки таблицы."
+    },
+    "SDIModifiersFilter": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Системное имя элемента. Может использоваться для ссылок из действий/эффектов."
+        },
+        "title": {
+          "type": "string",
+          "description": "Пользовательский заголовок/подпись для отображения в UI."
+        },
+        "type": {
+          "type": "string"
+        },
+        "target": {
+          "type": "string"
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "default": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object"
+            },
+            {
+              "type": "array",
+              "items": {}
+            }
+          ]
+        }
+      },
+      "required": [
+        "name",
+        "type"
+      ],
+      "description": "Модификатор фильтра, влияющий на целевое поле target."
+    },
+    "SDIChartFilter": {
+      "type": "object",
+      "properties": {
+        "static": {
+          "oneOf":[
+            {
+              "$ref": "#/$defs/SDIChartDaterangeFilter"
+            },
+            {
+              "$ref": "#/$defs/SDIChartSelectFilter"
+            }
+          ],
+          "discriminator": {
+            "propertyName": "type",
+            "mapping":{
+              "daterange": "#/$defs/SDIChartDaterangeFilter",
+              "select": "#/$defs/SDIChartSelectFilter"
+            }
+          }
+        },
+        "modifiers": {
+          "type": "array",
+          "items": {
+            "type":"object",
+            "properties":{
+              "target":{
+                "type":"string"
+              }
+            }
+          }
+        }
+      },
+      "description": "Фильтр графика для SDIChart."
+    },
+    "SDIChartDaterangeFilter":{
+      "type": "object",
+      "required":[
+        "name",
+        "title",
+        "type",
+        "rangeType",
+        "default"
+      ],
+      "properties": {
+        "name":{
+          "type":"string"
+        },
+        "title":{
+          "type":"string"
+        },
+        "isAs":{
+          "type":"boolean"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "daterange"
+          ]
+        },
+        "rangeType": {
+          "type": "string",
+          "enum": [
+            "Month",
+            "Day"
+          ]
+        },
+        "default": {
+          "type": "object",
+          "properties": {
+            "from": {
+              "type": "string"
+            },
+            "to": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "SDIChartSelectFilter":{
+      "type": "object",
+      "required":[
+        "name",
+        "title",
+        "type",
+        "default",
+        "options"
+      ],
+      "properties": {
+        "name":{
+          "type":"string"
+        },
+        "title":{
+          "type":"string"
+        },
+        "isAs":{
+          "type":"boolean"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "select"
+          ]
+        },
+        "default": {
+          "type": "string"
+        },
+        "target": {
+          "type": "string"
+        },
+        "options": {
+          "type": "array",
+          "items":{
+            "type":"object",
+            "required":[
+              "id",
+              "name"
+            ],
+            "properties":{
+              "id":{
+                "type":"string"
+              },
+              "name":{
+                "type":"string"
+              },
+              "disabled":{
+                "type":"boolean"
+              }
+            }
+          }
+        }
+      }
+    },
+    "SDIFilter":{
+      "type":"object",
+      "required":[
+        "selector"
+      ],
+      "properties":{
+        "selector":{
+          "type":"string",
+          "enum":[
+            "sdi-filter"
+          ]
+        },
+        "name":{
+          "type":"string"
+        },
+        "quickSearch":{
+          "type":"boolean"
+        },
+        "localSearch":{
+          "type":"boolean",
+          "description":"Отвечает за использование локальной или серверной фильтрации. Если используется пагинация данных, то используется только серверная фильтрация",
+          "default":false
+        },
+        "size":{
+          "type":"string",
+          "enum":[
+            "small",
+            "medium"
+          ]
+        },
+        "static":{
+          "$ref": "#/$defs/SDIFilterStaticField"
+        },
+        "advanced":{
+          "$ref": "#/$defs/SDIFilterAdvancedField"
+        },
+        "custom":{
+          "$ref": "#/$defs/SDIFilterCustomField"
+        }
+      }
+    },
+    "SDIFilterBaseFieldsCommon":{
+      "type":"object",
+      "required":[
+        "type"
+      ],
+      "properties":{
+        "type":{
+          "type":"string",
+          "enum":[
+            "string",
+            "boolean",
+            "phone",
+            "email",
+            "rank"
+          ]
+        }
+      }
+    },
+    "SDIFilterBaseFieldsSelect":{
+      "type":"object",
+      "required":[
+        "type"
+      ],
+      "properties":{
+        "type":{
+          "type":"string",
+          "enum":[
+            "select"
+          ]
+        },
+        "multiple":{
+          "type":"boolean"
+        },
+        "grouping":{
+          "type":"boolean"
+        },
+        "api":{
+          "$ref": "#/$defs/SDIApi"
+        },
+        "options":{
+          "$ref": "#/$defs/filterOptions"
+        }
+      }
+    },
+    "filterOptions":{
+      "type":"array",
+      "items":{
+        "type":"object",
+        "properties":{
+          "id":{},
+          "name":{
+            "type":"string"
+          },
+          "group":{
+            "type":"string"
+          },
+          "children":{
+            "$ref": "#/$defs/filterOptions"
+          }
+        }
+      }
+    },
+    "SDIFilterBaseFieldsDate":{
+      "type":"object",
+      "required":[
+        "type"
+      ],
+      "properties":{
+        "type":{
+          "type":"string",
+          "enum":[
+            "date",
+            "daterange"
+          ]
+        },
+        "showIntervals":{
+          "type":"string",
+          "enum":[
+            "past",
+            "future"
+          ]
+        },
+        "minDate":{
+          "type":"string"
+        },
+        "min":{
+          "type":"string"
+        },
+        "max":{
+          "type":"string"
+        }
+      }
+    },
+    "SDIFilterBaseFieldsNumber":{
+      "type":"object",
+      "required":[
+        "type"
+      ],
+      "properties":{
+        "type":{
+          "type":"string",
+          "enum":[
+            "number",
+            "decimal",
+            "money"
+          ]
+        },
+        "min":{
+          "type":"integer"
+        },
+        "max":{
+          "type":"integer"
+        },
+        "precision":{
+          "type":"integer"
+        }
+      }
+    },
+    "SDIFilterBaseFields":{
+      "allOf":[
+        {
+          "type":"object",
+          "properties":{
+            "name":{
+              "type":"string"
+            },
+            "title":{
+              "type":"string"
+            },
+            "validators":{
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/SDIFieldValidator"
+              }
+            },
+            "default":{},
+            "description":{
+              "type":"string"
+            },
+            "isAs":{
+              "type":"boolean"
+            }
+          }
+        },
+        {
+          "oneOf":[
+            {
+              "$ref": "#/$defs/SDIFilterBaseFieldsCommon"
+            },
+            {
+              "$ref": "#/$defs/SDIFilterBaseFieldsSelect"
+            },
+            {
+              "$ref": "#/$defs/SDIFilterBaseFieldsDate"
+            },
+            {
+              "$ref": "#/$defs/SDIFilterBaseFieldsNumber"
+            }
+          ],
+          "discriminator": {
+            "propertyName": "type",
+            "mapping": {
+              "string": "#/$defs/SDIFilterBaseFieldsCommon",
+              "number": "#/$defs/SDIFilterBaseFieldsNumber",
+              "decimal": "#/$defs/SDIFilterBaseFieldsNumber",
+              "money": "#/$defs/SDIFilterBaseFieldsNumber",
+              "boolean": "#/$defs/SDIFilterBaseFieldsCommon",
+              "phone": "#/$defs/SDIFilterBaseFieldsCommon",
+              "email": "#/$defs/SDIFilterBaseFieldsCommon",
+              "date": "#/$defs/SDIFilterBaseFieldsDate",
+              "daterange": "#/$defs/SDIFilterBaseFieldsDate",
+              "select": "#/$defs/SDIFilterBaseFieldsSelect",
+              "rank": "#/$defs/SDIFilterBaseFieldsCommon"
+            }
+          }
+        }
+      ]
+    },
+    "SDIFilterStaticField": {
+      "allOf":[
+        {
+          "$ref": "#/$defs/SDIFilterBaseFields"
+        },
+        {
+          "type":"object",
+          "properties": {
+            "operator":{
+              "$ref": "#/$defs/FilterOperator"
+            }
+          }
+        }
+      ]
+    },
+    "SDIFilterAdvancedField": {
+      "allOf":[
+        {
+          "$ref": "#/$defs/SDIFilterBaseFields"
+        },
+        {
+          "type":"object",
+          "properties": {
+            "operators":{
+              "type":"array",
+              "items":{
+                "$ref": "#/$defs/FilterOperator"
+              }
+            },
+            "subFilter":{
+              "$ref": "#/$defs/SDIFilterAdvancedField"
+            }
+          }
+        }
+      ]
+    },
+    "SDIFilterCustomField": {
+      "type": "object",
+      "required": [
+        "name",
+        "title"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Системное имя элемента. Может использоваться для ссылок из действий/эффектов."
+        },
+        "title": {
+          "type": "string",
+          "description": "Пользовательский заголовок/подпись для отображения в UI."
+        },
+        "subFilter": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SDIFilterCustomField"
+          }
+        }
+      },
+      "description": "Пользовательская структура фильтра с рекурсивным subFilter."
+    }
+  }
+}

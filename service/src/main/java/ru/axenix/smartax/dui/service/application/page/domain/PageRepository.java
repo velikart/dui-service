@@ -9,7 +9,6 @@ import java.util.UUID;
 /**
  * Репозиторий взаимодействия с БД таблицы <strong>page</strong>
  *
- * @author Sergey Dresvyanin.
  */
 @Repository
 public interface PageRepository extends JpaRepository<PageEntity, UUID> {

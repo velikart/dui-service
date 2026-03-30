@@ -1,0 +1,27 @@
+plugins {
+    id 'ru.axenix.smartax.plugin.openapi-configurator-plugin' version "${CONFIGURATOR_PLUGIN_VERSION}"
+}
+
+dependencies {
+    implementation platform(external.spring.boot.bom)
+    api project(':dui-service-contract')
+
+    implementation "org.openapitools:openapi-generator-gradle-plugin:7.5.0"
+
+    api "org.springframework.boot:spring-boot-starter-webflux"
+    api external.spring.boot.autoconfigure
+
+    annotationProcessor external.lombok
+    annotationProcessor external.spring.boot.configuration.proccessor
+
+    compileOnly external.lombok
+    compileOnly "javax.annotation:javax.annotation-api:1.3.2"
+    compileOnly "com.google.code.findbugs:jsr305:3.0.2"
+
+    implementation "org.openapitools:jackson-databind-nullable:0.2.7"
+
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.13.4'
+
+    testImplementation internal.test.commons
+    testImplementation external.spring.boot.starter.test
+}

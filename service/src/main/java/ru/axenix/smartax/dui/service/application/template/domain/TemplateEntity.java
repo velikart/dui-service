@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
-import ru.axenix.smartax.dui.service.application.template.model.TemplateType;
+import ru.axenix.smartax.dui.service.contract.model.TemplateFilterDto;
 
 /**
  * Доменная модель <strong>Шаблон</strong>.
@@ -61,5 +61,5 @@ public class TemplateEntity {
      */
     @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false)
-    private TemplateType type;
+    private TemplateFilterDto.TypeEnum type;
 }

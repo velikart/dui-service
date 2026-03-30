@@ -9,7 +9,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ru.axenix.smartax.dui.service.application.page.service.PageService;
-import ru.axenix.smartax.dui.service.application.page.model.PageDto;
+import ru.axenix.smartax.dui.service.contract.model.PageDto;
+
+import java.util.Map;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -35,30 +37,36 @@ class PageControllerTest {
 
     @Test
     void testGetPageByName() throws Exception {
-        // Arrange
         String pageName = "testPage";
+
         PageDto pageDto = new PageDto();
         pageDto.setName(pageName);
+
         when(pageService.getPageByName(pageName)).thenReturn(pageDto);
 
-        mockMvc.perform(get("/app/v1/page").param("pageName", pageName))
+        mockMvc.perform(get("/app/v1/page")
+                        .param("pageName", pageName))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.name").value(pageName));
     }
 
     @Test
     void testGetPageInstructions() throws Exception {
-        // Arrange
         String pageName = "testPage";
+
         PageDto pageDto = new PageDto();
         pageDto.setName(pageName);
-        pageDto.setInstructions("Test instructions");
+        pageDto.setInstructions(Map.of("key", "value"));
+
         when(pageService.getPageByName(pageName)).thenReturn(pageDto);
 
-        mockMvc.perform(get("/app/v1/page/instructions").param("pageName", pageName))
+        mockMvc.perform(get("/app/v1/page/instructions")
+                        .param("pageName", pageName))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(content().string("Test instructions"));
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+
+                // проверяем JSON
+                .andExpect(jsonPath("$.key").value("value"));
     }
 }

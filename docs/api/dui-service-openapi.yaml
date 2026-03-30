@@ -1,0 +1,1364 @@
+openapi: 3.1.0
+info:
+  title: DUI-SERVICE
+  description: Сервис администрирования Dynamic UI
+  version: v1.0
+servers:
+  - url: https://dui-service.develop.apps.smartax-dev.smartax-dev-k8s
+    description: Generated server url
+tags:
+  - name: Templates
+    description: Page template management
+  - name: PrintTemplates
+    description: Print service integration
+  - name: Collections
+    description: Admin collections management
+  - name: Pages
+    description: Page retrieval API
+
+paths:
+  /app/v1/print/template/{templateId}:
+    get:
+      tags:
+        - PrintTemplates
+      summary: Получение шаблона печатной формы
+      description: Получение шаблона печатной формы
+      operationId: getTemplate
+      parameters:
+        - name: templateId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Запрос успешно выполнен
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/TemplateDto"
+        "400":
+          description: Ошибка в запросе
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/RestResponse"
+              example:
+                status: error
+                error:
+                  code: "400"
+                  message: Ошибка в запросе
+                meta:
+                  actualDateTime: "2017-08-14T12:17:47.720"
+                  fieldErrors:
+                    - field: string
+                      message: must not be blank
+        "500":
+          description: Внутренняя ошибка приложения
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/RestResponse"
+              example:
+                status: error
+                error:
+                  code: "500"
+                  message: Внутренняя ошибка сервиса
+                  description: Adapter not responding
+                meta:
+                  actualDateTime: "2017-08-14T12:17:47.720"
+      security:
+        - Authorization: []
+
+    put:
+      tags:
+        - PrintTemplates
+      summary: Обновление печатной формы
+      description: Обновление печатной формы
+      operationId: updateTemplate
+      parameters:
+        - name: templateId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TemplateDto"
+        required: true
+      responses:
+        "200":
+          description: Запрос успешно выполнен
+        "400":
+          description: Ошибка в запросе
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/RestResponse"
+              example:
+                status: error
+                error:
+                  code: "400"
+                  message: Ошибка в запросе
+                meta:
+                  actualDateTime: "2017-08-14T12:17:47.720"
+                  fieldErrors:
+                    - field: string
+                      message: must not be blank
+        "500":
+          description: Внутренняя ошибка приложения
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/RestResponse"
+              example:
+                status: error
+                error:
+                  code: "500"
+                  message: Внутренняя ошибка сервиса
+                  description: Adapter not responding
+                meta:
+                  actualDateTime: "2017-08-14T12:17:47.720"
+      security:
+        - Authorization: []
+
+    delete:
+      tags:
+        - PrintTemplates
+      summary: Удаление шаблона печатной формы
+      description: Удаление шаблона печатной формы
+      operationId: deleteTemplate
+      parameters:
+        - name: templateId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Запрос успешно выполнен
+        "400":
+          description: Ошибка в запросе
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/RestResponse"
+              example:
+                status: error
+                error:
+                  code: "400"
+                  message: Ошибка в запросе
+                meta:
+                  actualDateTime: "2017-08-14T12:17:47.720"
+                  fieldErrors:
+                    - field: string
+                      message: must not be blank
+        "500":
+          description: Внутренняя ошибка приложения
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/RestResponse"
+              example:
+                status: error
+                error:
+                  code: "500"
+                  message: Внутренняя ошибка сервиса
+                  description: Adapter not responding
+                meta:
+                  actualDateTime: "2017-08-14T12:17:47.720"
+      security:
+        - Authorization: []
+
+  /app/v1/collection/{collectionUUID}:
+    get:
+      tags:
+        - Collections
+      summary: Получение коллекции администратора по идентификатору
+      description: Получение коллекции администратора по идентификатору UUID
+      operationId: getCollection
+      parameters:
+        - name: collectionUUID
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Запрос успешно выполнен
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/CollectionDto"
+        "400":
+          description: Ошибка в запросе
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/RestResponse"
+              example:
+                status: error
+                error:
+                  code: "400"
+                  message: Ошибка в запросе
+                meta:
+                  actualDateTime: "2017-08-14T12:17:47.720"
+                  fieldErrors:
+                    - field: string
+                      message: must not be blank
+        "500":
+          description: Внутренняя ошибка приложения
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/RestResponse"
+              example:
+                status: error
+                error:
+                  code: "500"
+                  message: Внутренняя ошибка сервиса
+                  description: Adapter not responding
+                meta:
+                  actualDateTime: "2017-08-14T12:17:47.720"
+      security:
+        - Authorization: []
+
+    put:
+      tags:
+        - Collections
+      summary: Редактирование коллекций администратора
+      description: Редактирование коллекций администратора
+      operationId: editCollection
+      parameters:
+        - name: collectionUUID
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CollectionDto"
+        required: true
+      responses:
+        "200":
+          description: Запрос успешно выполнен
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/CollectionDto"
+        "400":
+          description: Ошибка в запросе
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/RestResponse"
+              example:
+                status: error
+                error:
+                  code: "400"
+                  message: Ошибка в запросе
+                meta:
+                  actualDateTime: "2017-08-14T12:17:47.720"
+                  fieldErrors:
+                    - field: string
+                      message: must not be blank
+        "500":
+          description: Внутренняя ошибка приложения
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/RestResponse"
+              example:
+                status: error
+                error:
+                  code: "500"
+                  message: Внутренняя ошибка сервиса
+                  description: Adapter not responding
+                meta:
+                  actualDateTime: "2017-08-14T12:17:47.720"
+      security:
+        - Authorization: []
+
+    delete:
+      tags:
+        - Collections
+      summary: Удаление коллекции администратора
+      description: Удаление коллекции администратора по UUID
+      operationId: deleteCollection
+      parameters:
+        - name: collectionUUID
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Запрос успешно выполнен
+        "400":
+          description: Ошибка в запросе
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/RestResponse"
+              example:
+                status: error
+                error:
+                  code: "400"
+                  message: Ошибка в запросе
+                meta:
+                  actualDateTime: "2017-08-14T12:17:47.720"
+                  fieldErrors:
+                    - field: string
+                      message: must not be blank
+        "500":
+          description: Внутренняя ошибка приложения
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/RestResponse"
+              example:
+                status: error
+                error:
+                  code: "500"
+                  message: Внутренняя ошибка сервиса
+                  description: Adapter not responding
+                meta:
+                  actualDateTime: "2017-08-14T12:17:47.720"
+      security:
+        - Authorization: []
+
+  /app/v1/template/list:
+    post:
+      tags:
+        - Templates
+      summary: Получение списка шаблонов страниц
+      description: Получение списка шаблонов страниц без контента
+      operationId: getTemplates
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TemplateFilterDto"
+      responses:
+        "200":
+          description: Запрос успешно выполнен
+          content:
+            "*/*":
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TemplateDto"
+        "400":
+          description: Ошибка в запросе
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/RestResponse"
+              example:
+                status: error
+                error:
+                  code: "400"
+                  message: Ошибка в запросе
+                meta:
+                  actualDateTime: "2017-08-14T12:17:47.720"
+                  fieldErrors:
+                    - field: string
+                      message: must not be blank
+        "500":
+          description: Внутренняя ошибка приложения
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/RestResponse"
+              example:
+                status: error
+                error:
+                  code: "500"
+                  message: Внутренняя ошибка сервиса
+                  description: Adapter not responding
+                meta:
+                  actualDateTime: "2017-08-14T12:17:47.720"
+      security:
+        - Authorization: []
+
+  /app/v1/print/template:
+    post:
+      tags:
+        - PrintTemplates
+      summary: Создание печатной формы
+      description: Создание печатной формы
+      operationId: createTemplate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TemplateRequest"
+        required: true
+      responses:
+        "200":
+          description: Запрос успешно выполнен
+        "400":
+          description: Ошибка в запросе
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/RestResponse"
+              example:
+                status: error
+                error:
+                  code: "400"
+                  message: Ошибка в запросе
+                meta:
+                  actualDateTime: "2017-08-14T12:17:47.720"
+                  fieldErrors:
+                    - field: string
+                      message: must not be blank
+        "500":
+          description: Внутренняя ошибка приложения
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/RestResponse"
+              example:
+                status: error
+                error:
+                  code: "500"
+                  message: Внутренняя ошибка сервиса
+                  description: Adapter not responding
+                meta:
+                  actualDateTime: "2017-08-14T12:17:47.720"
+      security:
+        - Authorization: []
+
+  /app/v1/print/template/{templateId}/schema:
+    post:
+      tags:
+        - PrintTemplates
+      summary: Получение схемы плейсхолдеров шаблона печатной формы
+      description: Получение схемы плейсхолдеров шаблона печатной формы
+      operationId: getTemplateSchema
+      parameters:
+        - name: templateId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Запрос успешно выполнен
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/TableResponse"
+        "400":
+          description: Ошибка в запросе
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/RestResponse"
+              example:
+                status: error
+                error:
+                  code: "400"
+                  message: Ошибка в запросе
+                meta:
+                  actualDateTime: "2017-08-14T12:17:47.720"
+                  fieldErrors:
+                    - field: string
+                      message: must not be blank
+        "500":
+          description: Внутренняя ошибка приложения
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/RestResponse"
+              example:
+                status: error
+                error:
+                  code: "500"
+                  message: Внутренняя ошибка сервиса
+                  description: Adapter not responding
+                meta:
+                  actualDateTime: "2017-08-14T12:17:47.720"
+      security:
+        - Authorization: []
+
+  /app/v1/print/template/filter:
+    post:
+      tags:
+        - PrintTemplates
+      summary: Получение списка шаблонов печатной формы
+      description: Получение списка шаблонов печатной формы с фильтрацией, сортировкой и пагинацией
+      operationId: getTemplates_1
+      responses:
+        "200":
+          description: Запрос успешно выполнен
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/TableResponse"
+        "400":
+          description: Ошибка в запросе
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/RestResponse"
+              example:
+                status: error
+                error:
+                  code: "400"
+                  message: Ошибка в запросе
+                meta:
+                  actualDateTime: "2017-08-14T12:17:47.720"
+                  fieldErrors:
+                    - field: string
+                      message: must not be blank
+        "500":
+          description: Внутренняя ошибка приложения
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/RestResponse"
+              example:
+                status: error
+                error:
+                  code: "500"
+                  message: Внутренняя ошибка сервиса
+                  description: Adapter not responding
+                meta:
+                  actualDateTime: "2017-08-14T12:17:47.720"
+      security:
+        - Authorization: []
+
+  /app/v1/collection:
+    post:
+      tags:
+        - Collections
+      summary: Создание коллекции администратора
+      description: Создание коллекции администратора со страницами и моками-объектов
+      operationId: createCollection
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CollectionDto"
+        required: true
+      responses:
+        "200":
+          description: Запрос успешно выполнен
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/CollectionDto"
+        "400":
+          description: Ошибка в запросе
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/RestResponse"
+              example:
+                status: error
+                error:
+                  code: "400"
+                  message: Ошибка в запросе
+                meta:
+                  actualDateTime: "2017-08-14T12:17:47.720"
+                  fieldErrors:
+                    - field: string
+                      message: must not be blank
+        "500":
+          description: Внутренняя ошибка приложения
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/RestResponse"
+              example:
+                status: error
+                error:
+                  code: "500"
+                  message: Внутренняя ошибка сервиса
+                  description: Adapter not responding
+                meta:
+                  actualDateTime: "2017-08-14T12:17:47.720"
+      security:
+        - Authorization: []
+
+  /app/v1/collection/{collectionUUID}/history:
+    post:
+      tags:
+        - Collections
+      summary: Получение истории изменений коллекции администратора
+      description: Получение списка коллекций в истории изменений по UUID коллекции
+      operationId: getCollectionHistory
+      parameters:
+        - name: collectionUUID
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Запрос успешно выполнен
+          content:
+            "*/*":
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CollectionHistoryDto"
+        "400":
+          description: Ошибка в запросе
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/RestResponse"
+              example:
+                status: error
+                error:
+                  code: "400"
+                  message: Ошибка в запросе
+                meta:
+                  actualDateTime: "2017-08-14T12:17:47.720"
+                  fieldErrors:
+                    - field: string
+                      message: must not be blank
+        "500":
+          description: Внутренняя ошибка приложения
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/RestResponse"
+              example:
+                status: error
+                error:
+                  code: "500"
+                  message: Внутренняя ошибка сервиса
+                  description: Adapter not responding
+                meta:
+                  actualDateTime: "2017-08-14T12:17:47.720"
+      security:
+        - Authorization: []
+
+  /app/v1/collection/list:
+    post:
+      tags:
+        - Collections
+      summary: Получение списка коллекций администратора
+      description: Получение списка коллекций администратора по его ID из контекста авторизации
+      operationId: getAllCollections
+      responses:
+        "200":
+          description: Запрос успешно выполнен
+          content:
+            "*/*":
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CollectionShortDto"
+        "400":
+          description: Ошибка в запросе
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/RestResponse"
+              example:
+                status: error
+                error:
+                  code: "400"
+                  message: Ошибка в запросе
+                meta:
+                  actualDateTime: "2017-08-14T12:17:47.720"
+                  fieldErrors:
+                    - field: string
+                      message: must not be blank
+        "500":
+          description: Внутренняя ошибка приложения
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/RestResponse"
+              example:
+                status: error
+                error:
+                  code: "500"
+                  message: Внутренняя ошибка сервиса
+                  description: Adapter not responding
+                meta:
+                  actualDateTime: "2017-08-14T12:17:47.720"
+      security:
+        - Authorization: []
+
+  /app/v1/template/{uuid}/page:
+    get:
+      tags:
+        - Templates
+      summary: Получение инструкции страницы шаблона
+      description: Получение json-инструкции страницы по идентификатору шаблона
+      operationId: getTemplatePage
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Запрос успешно выполнен
+          content:
+            "*/*":
+              schema:
+                type: string
+                format: binary
+        "400":
+          description: Ошибка в запросе
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/RestResponse"
+              example:
+                status: error
+                error:
+                  code: "400"
+                  message: Ошибка в запросе
+                meta:
+                  actualDateTime: "2017-08-14T12:17:47.720"
+                  fieldErrors:
+                    - field: string
+                      message: must not be blank
+        "500":
+          description: Внутренняя ошибка приложения
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/RestResponse"
+              example:
+                status: error
+                error:
+                  code: "500"
+                  message: Внутренняя ошибка сервиса
+                  description: Adapter not responding
+                meta:
+                  actualDateTime: "2017-08-14T12:17:47.720"
+      security:
+        - Authorization: []
+
+  /app/v1/template/{uuid}/image:
+    get:
+      tags:
+        - Templates
+      summary: Получение скрина (примера) страницы шаблона
+      description: Получение скрина (примера) страницы по идентификатору шаблона
+      operationId: getTemplateImage
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Запрос успешно выполнен
+          content:
+            "*/*":
+              schema:
+                type: string
+                format: binary
+        "400":
+          description: Ошибка в запросе
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/RestResponse"
+              example:
+                status: error
+                error:
+                  code: "400"
+                  message: Ошибка в запросе
+                meta:
+                  actualDateTime: "2017-08-14T12:17:47.720"
+                  fieldErrors:
+                    - field: string
+                      message: must not be blank
+        "500":
+          description: Внутренняя ошибка приложения
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/RestResponse"
+              example:
+                status: error
+                error:
+                  code: "500"
+                  message: Внутренняя ошибка сервиса
+                  description: Adapter not responding
+                meta:
+                  actualDateTime: "2017-08-14T12:17:47.720"
+      security:
+        - Authorization: []
+
+  /app/v1/print/template/{templateId}/download:
+    get:
+      tags:
+        - PrintTemplates
+      summary: Скачивание файла печатной формы по UUID
+      description: Скачивание файла печатной формы по UUID
+      operationId: downloadTemplate
+      parameters:
+        - name: templateId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Запрос успешно выполнен
+          content:
+            "*/*":
+              schema:
+                type: string
+                format: binary
+        "400":
+          description: Ошибка в запросе
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/RestResponse"
+              example:
+                status: error
+                error:
+                  code: "400"
+                  message: Ошибка в запросе
+                meta:
+                  actualDateTime: "2017-08-14T12:17:47.720"
+                  fieldErrors:
+                    - field: string
+                      message: must not be blank
+        "500":
+          description: Внутренняя ошибка приложения
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/RestResponse"
+              example:
+                status: error
+                error:
+                  code: "500"
+                  message: Внутренняя ошибка сервиса
+                  description: Adapter not responding
+                meta:
+                  actualDateTime: "2017-08-14T12:17:47.720"
+      security:
+        - Authorization: []
+
+  /app/v1/page:
+    get:
+      tags:
+        - Pages
+      summary: Получение объекта страницы
+      description: Получение объекта страницы по маршруту
+      operationId: getPageByName
+      parameters:
+        - name: pageName
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Запрос успешно выполнен
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/PageDto"
+        "400":
+          description: Ошибка в запросе
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/RestResponse"
+              example:
+                status: error
+                error:
+                  code: "400"
+                  message: Ошибка в запросе
+                meta:
+                  actualDateTime: "2017-08-14T12:17:47.720"
+                  fieldErrors:
+                    - field: string
+                      message: must not be blank
+        "500":
+          description: Внутренняя ошибка приложения
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/RestResponse"
+              example:
+                status: error
+                error:
+                  code: "500"
+                  message: Внутренняя ошибка сервиса
+                  description: Adapter not responding
+                meta:
+                  actualDateTime: "2017-08-14T12:17:47.720"
+      security:
+        - Authorization: []
+
+  /app/v1/page/instructions:
+    get:
+      tags:
+        - Pages
+      summary: Получение json инструкции
+      description: Получение json-инструкции страницы по маршруту страницы
+      operationId: getPageInstructions
+      parameters:
+        - name: pageName
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Запрос успешно выполнен
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        "400":
+          description: Ошибка в запросе
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RestResponse"
+              example:
+                status: error
+                error:
+                  code: "400"
+                  message: Ошибка в запросе
+                meta:
+                  actualDateTime: "2017-08-14T12:17:47.720"
+                  fieldErrors:
+                    - field: string
+                      message: must not be blank
+        "500":
+          description: Внутренняя ошибка приложения
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RestResponse"
+              example:
+                status: error
+                error:
+                  code: "500"
+                  message: Внутренняя ошибка сервиса
+                  description: Adapter not responding
+                meta:
+                  actualDateTime: "2017-08-14T12:17:47.720"
+      security:
+        - Authorization: []
+
+  /app/v1/collection/{collectionUUID}/history/{historyUUID}:
+    get:
+      tags:
+        - Collections
+      summary: Получение коллекции администратора из истории изменений
+      description: Получение коллекции администратора из истории изменений по UUID истории
+      operationId: getCollectionByHistory
+      parameters:
+        - name: collectionUUID
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: historyUUID
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Запрос успешно выполнен
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/CollectionDto"
+        "400":
+          description: Ошибка в запросе
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/RestResponse"
+              example:
+                status: error
+                error:
+                  code: "400"
+                  message: Ошибка в запросе
+                meta:
+                  actualDateTime: "2017-08-14T12:17:47.720"
+                  fieldErrors:
+                    - field: string
+                      message: must not be blank
+        "500":
+          description: Внутренняя ошибка приложения
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/RestResponse"
+              example:
+                status: error
+                error:
+                  code: "500"
+                  message: Внутренняя ошибка сервиса
+                  description: Adapter not responding
+                meta:
+                  actualDateTime: "2017-08-14T12:17:47.720"
+      security:
+        - Authorization: []
+
+  /app/v1/collection/{collectionUUID}/export:
+    get:
+      tags:
+        - Collections
+      summary: Экспорт коллекции администратора
+      description: Экспорт коллекции администратора в формате .json файла
+      operationId: exportCollection
+      parameters:
+        - name: collectionUUID
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Запрос успешно выполнен
+          content:
+            "*/*":
+              schema:
+                type: string
+                format: binary
+        "400":
+          description: Ошибка в запросе
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/RestResponse"
+              example:
+                status: error
+                error:
+                  code: "400"
+                  message: Ошибка в запросе
+                meta:
+                  actualDateTime: "2017-08-14T12:17:47.720"
+                  fieldErrors:
+                    - field: string
+                      message: must not be blank
+        "500":
+          description: Внутренняя ошибка приложения
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/RestResponse"
+              example:
+                status: error
+                error:
+                  code: "500"
+                  message: Внутренняя ошибка сервиса
+                  description: Adapter not responding
+                meta:
+                  actualDateTime: "2017-08-14T12:17:47.720"
+      security:
+        - Authorization: []
+
+components:
+  schemas:
+    FileResponseDto:
+      type: object
+      properties:
+        uuid:
+          type: string
+          description: Идентификатор файла
+        name:
+          type: string
+          description: Наименование файла
+        content:
+          type: string
+          description: Контент файла в формате base64
+
+    TemplateDto:
+      type: object
+      properties:
+        templateId:
+          type: string
+          format: uuid
+          description: ID шаблона
+        templateCode:
+          type: string
+          description: Код шаблона
+        templateGroup:
+          type: string
+          description: Группа шаблона
+        description:
+          type: string
+          description: Описание шаблона
+        schema:
+          type: object
+          additionalProperties: true
+          description: JSON-schema плейсхолдеров
+        creationDate:
+          type: string
+          format: date-time
+          description: Дата создания
+        updateDate:
+          type: string
+          format: date-time
+          description: Дата обновления
+        file:
+          $ref: "#/components/schemas/FileResponseDto"
+          description: Файл шаблона
+
+    RestResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Статус выполнения запроса
+          enum:
+            - success
+            - error
+            - warning
+        data:
+          type: object
+          additionalProperties: true
+          description: Результат выполнения запроса
+        error:
+          $ref: "#/components/schemas/RestResponseError"
+          description: Описание ошибки выполнения запроса
+        warning:
+          $ref: "#/components/schemas/RestResponseWarning"
+          description: Предупреждение возникающее при выполнении запроса
+        meta:
+          $ref: "#/components/schemas/RestResponseMeta"
+          description: Мета-информация
+      required:
+        - status
+
+    CollectionDto:
+      type: object
+      description: Модель коллекции
+      properties:
+        uuid:
+          type: string
+          format: uuid
+          description: Идентификаторы записи коллекции
+        title:
+          type: string
+          description: Наименование коллекции
+        pages:
+          type: array
+          description: Объект json со списком страниц
+          items:
+            type: object
+            additionalProperties: true
+        mocks:
+          type: array
+          description: Объект json со списком моков запросов
+          items:
+            type: object
+            additionalProperties: true
+        config:
+          type: object
+          additionalProperties: true
+          description: Объект json конфигурации стилей коллекции
+      required:
+        - config
+        - mocks
+        - pages
+        - title
+        - uuid
+
+    TemplateFilterDto:
+      type: object
+      description: Модель фильтрации шаблона
+      properties:
+        type:
+          type: string
+          description: Тип шаблона (Страница/Компонент)
+          enum:
+            - PAGE
+            - COMPONENT
+
+    TemplateRequest:
+      type: object
+      properties:
+        templateCode:
+          type: string
+          description: Код шаблона
+        description:
+          type: string
+          description: Описание шаблона
+        file:
+          $ref: "#/components/schemas/FileResponseDto"
+          description: Модель файла
+
+    TableResponse:
+      type: object
+      description: Универсальный ответ для sdi-table
+      properties:
+        total:
+          type: integer
+          format: int32
+          description: Общее количество записей
+        records:
+          type: array
+          description: Универсальный список объектов. Каждый объект является словарём ключ → значение
+          items:
+            type: object
+            additionalProperties: true
+
+    CollectionHistoryDto:
+      type: object
+      properties:
+        uuid:
+          type: string
+          format: uuid
+          description: Идентификаторы записи коллекции
+        title:
+          type: string
+          description: Наименование коллекции
+        creationDate:
+          type: string
+          format: date-time
+          description: Дата создания записи коллекции
+        isCurrent:
+          type: boolean
+          description: Признак текущей актуальной используемой коллекции
+        pages:
+          type: array
+          description: Объект json со списком страниц
+          items:
+            type: object
+            additionalProperties: true
+        mocks:
+          type: array
+          description: Объект json со списком моков запросов
+          items:
+            type: object
+            additionalProperties: true
+        config:
+          type: object
+          additionalProperties: true
+          description: Объект json конфигурации стилей коллекции
+      required:
+        - config
+        - mocks
+        - pages
+
+    CollectionShortDto:
+      type: object
+      description: Модель списка коллекций
+      properties:
+        uuid:
+          type: string
+          format: uuid
+          description: Идентификаторы записи коллекции
+        title:
+          type: string
+          description: Наименование коллекции
+      required:
+        - title
+        - uuid
+
+    PageDto:
+      type: object
+      description: Модель страницы для микрофронта
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Идентификатор страницы
+        title:
+          type: string
+          description: Наименование старницы
+        name:
+          type: string
+          description: Название страницы по которому она доступна
+        instructions:
+          type: object
+          additionalProperties: true
+          description: Объект json страницы
+        updateDateTime:
+          type: string
+          format: date-time
+          description: Дата и время обновления
+        author:
+          type: string
+          description: Создатель записи
+
+    RestResponseError:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Код ошибки
+        message:
+          type: string
+          description: Сообщение об ошибке
+        description:
+          type: string
+          description: Описание ошибки
+
+    RestResponseFieldError:
+      type: object
+      properties:
+        field:
+          type: string
+          description: Наименование поля
+        message:
+          type: string
+          description: Сообщение об ошибке
+
+    RestResponseMeta:
+      type: object
+      properties:
+        actualDateTime:
+          type: string
+          description: Время формирования ответа
+          example: "2024-02-02T15:13:36+02:00"
+        fieldErrors:
+          type: array
+          items:
+            $ref: "#/components/schemas/RestResponseFieldError"
+          description: Список описания ошибок валидации полей
+        faultSource:
+          type: string
+          description: Система источник ошибки\предупреждения
+
+    RestResponseWarning:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Текст предупреждения
+
+  securitySchemes:
+    Authorization:
+      type: apiKey
+      name: Authorization
+      in: header

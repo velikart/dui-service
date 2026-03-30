@@ -37,12 +37,14 @@ spring:
   ai:
     mcp:
       server:
+        # WebMVC + SSE (как в axenapi-web): дефолты Spring AI 1.0.x — sse-endpoint=/sse, sse-message-endpoint=/mcp/message
         transport: WEBMVC
         name: dui-collection-mcp
         instructions: >
           MCP server for dui-service collections (manifest JSON).
           Supports reading, creating and updating collections via existing CollectionService.
 
+# Совпадай с USERNAME/PASSWORD в mcp.json (Cursor шлёт HTTP Basic на /sse и /mcp/**).
 dui:
   mcp:
     http-auth:

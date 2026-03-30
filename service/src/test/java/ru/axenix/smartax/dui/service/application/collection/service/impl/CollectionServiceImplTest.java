@@ -13,10 +13,10 @@ import org.springframework.core.io.InputStreamResource;
 import ru.axenix.smartax.dui.service.application.collection.domain.CollectionEntity;
 import ru.axenix.smartax.dui.service.application.collection.domain.CollectionRepository;
 import ru.axenix.smartax.dui.service.application.collection.mapper.CollectionMapper;
+import ru.axenix.smartax.dui.service.contract.model.CollectionDto;
+import ru.axenix.smartax.dui.service.contract.model.CollectionHistoryDto;
+import ru.axenix.smartax.dui.service.contract.model.CollectionShortDto;
 import ru.axenix.smartax.dui.service.error.ApplicationException;
-import ru.axenix.smartax.dui.service.application.collection.model.CollectionDto;
-import ru.axenix.smartax.dui.service.application.collection.model.CollectionHistoryDto;
-import ru.axenix.smartax.dui.service.application.collection.model.CollectionShortDto;
 import ru.axenix.smartax.dui.service.application.template.model.FileDto;
 
 import java.time.LocalDateTime;

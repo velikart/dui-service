@@ -1,13 +1,13 @@
 package ru.axenix.smartax.dui.service.application.page.service;
 
-import ru.axenix.smartax.dui.service.application.page.model.PageDto;
+
+import ru.axenix.smartax.dui.service.contract.model.PageDto;
 
 import java.util.UUID;
 
 /**
  * Сервис для работы со страницами
  *
- * @author Sergey Dresvyanin
  */
 public interface PageService {
     /**

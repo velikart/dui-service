@@ -2,7 +2,7 @@ package ru.axenix.smartax.dui.service.application.template.domain;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import ru.axenix.smartax.dui.service.application.template.model.TemplateType;
+import ru.axenix.smartax.dui.service.contract.model.TemplateFilterDto;
 
 import java.util.List;
 import java.util.UUID;
@@ -21,5 +21,5 @@ public interface TemplateRepository extends JpaRepository<TemplateEntity, UUID> 
      * @param type Тип шаблона
      * @return Список шаблонов
      */
-    List<TemplateEntity> findAllByType(TemplateType type);
+    List<TemplateEntity> findAllByType(TemplateFilterDto.TypeEnum type);
 }

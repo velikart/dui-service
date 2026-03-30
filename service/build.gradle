@@ -6,6 +6,7 @@ plugins {
 dependencies {
     implementation platform(external.spring.boot.bom)
     implementation project(':dui-service-integration')
+    implementation project(':dui-service-contract')
 
     implementation internal.auth.common
     implementation internal.kafka.group

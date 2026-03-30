@@ -11,10 +11,10 @@ import ru.axenix.smartax.dui.service.application.collection.domain.CollectionEnt
 import ru.axenix.smartax.dui.service.application.collection.domain.CollectionRepository;
 import ru.axenix.smartax.dui.service.application.collection.mapper.CollectionMapper;
 import ru.axenix.smartax.dui.service.application.collection.service.CollectionService;
+import ru.axenix.smartax.dui.service.contract.model.CollectionDto;
+import ru.axenix.smartax.dui.service.contract.model.CollectionHistoryDto;
+import ru.axenix.smartax.dui.service.contract.model.CollectionShortDto;
 import ru.axenix.smartax.dui.service.error.ErrorDescription;
-import ru.axenix.smartax.dui.service.application.collection.model.CollectionDto;
-import ru.axenix.smartax.dui.service.application.collection.model.CollectionHistoryDto;
-import ru.axenix.smartax.dui.service.application.collection.model.CollectionShortDto;
 import ru.axenix.smartax.dui.service.application.template.model.FileDto;
 
 import java.io.ByteArrayInputStream;

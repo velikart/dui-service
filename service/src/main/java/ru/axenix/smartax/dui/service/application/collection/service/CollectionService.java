@@ -3,10 +3,10 @@ package ru.axenix.smartax.dui.service.application.collection.service;
 import java.util.List;
 import java.util.UUID;
 
-import ru.axenix.smartax.dui.service.application.collection.model.CollectionDto;
-import ru.axenix.smartax.dui.service.application.collection.model.CollectionHistoryDto;
-import ru.axenix.smartax.dui.service.application.collection.model.CollectionShortDto;
 import ru.axenix.smartax.dui.service.application.template.model.FileDto;
+import ru.axenix.smartax.dui.service.contract.model.CollectionDto;
+import ru.axenix.smartax.dui.service.contract.model.CollectionHistoryDto;
+import ru.axenix.smartax.dui.service.contract.model.CollectionShortDto;
 
 /**
  * Интерфейс сервиса управления коллекциями.

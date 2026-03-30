@@ -2,8 +2,8 @@ package ru.axenix.smartax.dui.service.application.template.service;
 
 import org.springframework.core.io.Resource;
 import ru.axenix.smartax.dui.service.application.template.model.FileDto;
-import ru.axenix.smartax.dui.service.application.template.model.TemplateDto;
-import ru.axenix.smartax.dui.service.application.template.model.TemplateFilterDto;
+import ru.axenix.smartax.dui.service.contract.model.TemplateDto;
+import ru.axenix.smartax.dui.service.contract.model.TemplateFilterDto;
 
 import java.util.List;
 import java.util.UUID;
