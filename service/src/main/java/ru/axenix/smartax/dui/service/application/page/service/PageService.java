@@ -1,8 +1,10 @@
 package ru.axenix.smartax.dui.service.application.page.service;
 
 
+import ru.axenix.smartax.dui.service.application.page.model.PageShortDto;
 import ru.axenix.smartax.dui.service.contract.model.PageDto;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -23,4 +25,11 @@ public interface PageService {
      * @return бъект страницы
      */
     PageDto getPageByName(String name);
+
+    /**
+     * Получение списка страниц с краткой информацией.
+     *
+     * @return список страниц.
+     */
+    List<PageShortDto> listPages();
 }
