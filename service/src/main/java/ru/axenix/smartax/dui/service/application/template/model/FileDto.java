@@ -10,8 +10,6 @@ import org.springframework.core.io.Resource;
 
 /**
  * Модель файла.
- *
- * @author Velikanov Artyom.
  */
 @Data
 @NoArgsConstructor

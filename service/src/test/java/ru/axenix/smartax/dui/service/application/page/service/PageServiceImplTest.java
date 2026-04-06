@@ -3,6 +3,8 @@ package ru.axenix.smartax.dui.service.application.page.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,11 +15,13 @@ import org.mockito.MockitoAnnotations;
 import ru.axenix.smartax.dui.service.application.page.domain.PageEntity;
 import ru.axenix.smartax.dui.service.application.page.domain.PageRepository;
 import ru.axenix.smartax.dui.service.application.page.mapper.PageMapper;
+import ru.axenix.smartax.dui.service.application.page.model.PageShortDto;
 import ru.axenix.smartax.dui.service.application.page.service.impl.PageServiceImpl;
 import ru.axenix.smartax.dui.service.contract.model.PageDto;
 import ru.axenix.smartax.dui.service.error.ApplicationException;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -99,5 +103,35 @@ class PageServiceImplTest {
         when(pageRepository.findByNameEqualsIgnoreCase(pageName)).thenReturn(Optional.empty());
 
         assertThrows(ApplicationException.class, () -> pageService.getPageByName(pageName));
+    }
+
+    @Test
+    void testListPages() {
+        UUID pageId = UUID.randomUUID();
+        PageEntity pageEntity = new PageEntity();
+        pageEntity.setId(pageId);
+        pageEntity.setName("dashboard");
+        pageEntity.setTitle("Dashboard");
+        when(pageRepository.findAllByOrderByNameAsc()).thenReturn(List.of(pageEntity));
+
+        List<PageShortDto> pages = pageService.listPages();
+
+        assertNotNull(pages);
+        assertEquals(1, pages.size());
+        assertEquals(pageId, pages.get(0).id());
+        assertEquals("dashboard", pages.get(0).name());
+        assertEquals("Dashboard", pages.get(0).title());
+        verify(pageRepository).findAllByOrderByNameAsc();
+    }
+
+    @Test
+    void testListPages_Empty() {
+        when(pageRepository.findAllByOrderByNameAsc()).thenReturn(List.of());
+
+        List<PageShortDto> pages = pageService.listPages();
+
+        assertNotNull(pages);
+        assertTrue(pages.isEmpty());
+        verify(pageRepository).findAllByOrderByNameAsc();
     }
 }

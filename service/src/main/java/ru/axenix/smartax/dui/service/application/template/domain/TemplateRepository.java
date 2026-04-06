@@ -9,8 +9,6 @@ import java.util.UUID;
 
 /**
  * Репозиторий взаимодействия с БД таблицы <strong>template</strong>
- *
- * @author Velikanov Artyom.
  */
 @Repository
 public interface TemplateRepository extends JpaRepository<TemplateEntity, UUID> {

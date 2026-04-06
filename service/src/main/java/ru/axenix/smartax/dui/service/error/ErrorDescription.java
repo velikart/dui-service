@@ -6,8 +6,6 @@ import org.springframework.http.HttpStatus;
 
 /**
  * Ошибки приложения.
- *
- * @author Velikanov Artyom.
  */
 @Getter
 @RequiredArgsConstructor

@@ -10,8 +10,6 @@ import ru.axenix.smartax.dui.service.contract.model.CollectionShortDto;
 
 /**
  * Интерфейс сервиса управления коллекциями.
- *
- * @author Velikanov Artyom.
  */
 public interface CollectionService {
 

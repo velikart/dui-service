@@ -18,7 +18,6 @@ import java.util.UUID;
 
 /**
  * Модель для хранения страниц UI
- *
  */
 @Getter
 @Setter

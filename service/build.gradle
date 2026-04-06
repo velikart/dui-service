@@ -18,12 +18,11 @@ dependencies {
     implementation external.mapstruct
     implementation external.springdoc.openapi.starter.webmvc.ui
     implementation external.spring.boot.starter.web
-    implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation external.spring.boot.starter.actuator
     implementation external.spring.boot.starter.data.jpa
     implementation external.spring.boot.starter.validation
+    implementation external.json.smart
     implementation 'org.springframework.ai:spring-ai-starter-mcp-server-webmvc:1.0.3'
-    implementation 'net.minidev:json-smart:2.4.9'
 
     runtimeOnly external.postgresql
 
@@ -44,5 +43,6 @@ tasks.named('processResources') {
         include 'template/**'
     }
 }
+
 
 

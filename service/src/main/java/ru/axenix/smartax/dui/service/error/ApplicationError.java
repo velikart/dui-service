@@ -9,8 +9,6 @@ import org.springframework.http.HttpStatus;
 
 /**
  * Модель обработки ошибок приложения.
- *
- * @author Velikanov Artyom.
  */
 @Data
 @NoArgsConstructor

@@ -24,8 +24,6 @@ import java.util.UUID;
 
 /**
  * Сервис управления коллекциями.
- *
- * @author Velikanov Artyom.
  */
 @Slf4j
 @Service

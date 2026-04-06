@@ -24,8 +24,6 @@ import org.hibernate.type.SqlTypes;
 
 /**
  * Доменная модель <strong>Запись коллекции</strong>.
- *
- * @author Velikanov Artyom.
  */
 @Getter
 @Setter

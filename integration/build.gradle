@@ -17,7 +17,7 @@ dependencies {
     implementation external.spring.boot.starter.web
     implementation external.spring.boot.starter.actuator
     implementation external.spring.boot.starter.validation
-    implementation 'net.minidev:json-smart:2.4.9'
+    implementation external.json.smart
 
     compileOnly external.lombok
 

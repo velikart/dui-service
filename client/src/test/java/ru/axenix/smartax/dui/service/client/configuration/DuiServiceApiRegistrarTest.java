@@ -27,7 +27,8 @@ class DuiServiceApiRegistrarTest {
         registrar = new TestableDuiServiceApiRegistrar();
         registry = new SimpleBeanDefinitionRegistry();
 
-        registrar.setEnvironment(new MockEnvironment());
+        registrar.setEnvironment(new MockEnvironment()
+                .withProperty("OPENAPI_API_PACKAGE", "ru.axenix.smartax.dui.service.client.api"));
         registrar.setResourceLoader(new DefaultResourceLoader());
     }
 
@@ -83,7 +84,8 @@ class DuiServiceApiRegistrarTest {
     @Test
     void findComponentsShouldReturnNonNullSet() {
         TestableDuiServiceApiRegistrar realRegistrar = new TestableDuiServiceApiRegistrar();
-        realRegistrar.setEnvironment(new MockEnvironment());
+        realRegistrar.setEnvironment(new MockEnvironment()
+                .withProperty("OPENAPI_API_PACKAGE", "ru.axenix.smartax.dui.service.client.api"));
         realRegistrar.setResourceLoader(new DefaultResourceLoader());
 
         Set<BeanDefinition> components = realRegistrar.callRealFindComponents();

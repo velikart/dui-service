@@ -4,8 +4,7 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
@@ -19,24 +18,28 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.type.AnnotationMetadata;
 import org.springframework.core.type.filter.TypeFilter;
 import org.springframework.stereotype.Component;
+
 import ru.axenix.smartax.dui.service.client.invoker.ApiClient;
 
+/**
+ * Регистрирует сгенерированные API-клиенты как Spring-бины.
+ */
+@Slf4j
 @Component
 @ConditionalOnClass(ApiClient.class)
-public class DuiServiceApiRegistrar
-        implements ImportBeanDefinitionRegistrar, ResourceLoaderAware, EnvironmentAware {
-
-    private static final Logger LOG = LoggerFactory.getLogger(DuiServiceApiRegistrar.class);
-    private static final String API_BASE_PACKAGE = "ru.axenix.smartax.dui.service.client.api";
+public class DuiServiceApiRegistrar implements ImportBeanDefinitionRegistrar, ResourceLoaderAware, EnvironmentAware {
 
     private ResourceLoader resourceLoader;
     private Environment environment;
 
+    /**
+     * Регистрирует найденные API-клиенты как Spring-бины.
+     *
+     * @param metadata метаданные импортируемой конфигурации
+     * @param registry реестр определений бинов
+     */
     @Override
-    public void registerBeanDefinitions(
-            AnnotationMetadata metadata,
-            BeanDefinitionRegistry registry
-    ) {
+    public void registerBeanDefinitions(AnnotationMetadata metadata, BeanDefinitionRegistry registry) {
         Set<BeanDefinition> components = findComponents();
 
         for (BeanDefinition beanDefinition : components) {
@@ -48,6 +51,12 @@ public class DuiServiceApiRegistrar
         }
     }
 
+    /**
+     * Регистрирует конкретный API-клиент по имени класса.
+     *
+     * @param className полное имя класса API-клиента
+     * @param registry реестр определений бинов
+     */
     private void registerApiBean(String className, BeanDefinitionRegistry registry) {
         try {
             Class<?> apiClass = Class.forName(className);
@@ -59,21 +68,30 @@ public class DuiServiceApiRegistrar
             Optional.ofNullable(builder.getBeanDefinition())
                     .ifPresentOrElse(
                             beanDefinition -> registerNonNullBeanDefinition(registry, beanName, beanDefinition),
-                            () -> LOG.warn("BeanDefinition is null for API client class {}", className)
+                            () -> log.warn("BeanDefinition is null for API client class {}", className)
                     );
         } catch (ClassNotFoundException ex) {
-            LOG.warn("Failed to register API client bean for class {}", className, ex);
+            log.warn("Failed to register API client bean for class {}", className, ex);
         }
     }
 
-    private void registerNonNullBeanDefinition(
-            BeanDefinitionRegistry registry,
-            String beanName,
-            BeanDefinition beanDefinition
-    ) {
+    /**
+     * Регистрирует подготовленное определение бина.
+     *
+     * @param registry реестр определений бинов
+     * @param beanName имя бина
+     * @param beanDefinition определение бина
+     */
+    private void registerNonNullBeanDefinition(BeanDefinitionRegistry registry, String beanName,
+                                               BeanDefinition beanDefinition) {
         registry.registerBeanDefinition(beanName, beanDefinition);
     }
 
+    /**
+     * Ищет API-классы в пакете, заданном через {@code OPENAPI_API_PACKAGE}.
+     *
+     * @return множество найденных определений бинов
+     */
     protected Set<BeanDefinition> findComponents() {
         ClassPathScanningCandidateComponentProvider scanner =
                 new ClassPathScanningCandidateComponentProvider(false, environment);
@@ -82,7 +100,7 @@ public class DuiServiceApiRegistrar
                 Class<?> clazz = Class.forName(metadataReader.getClassMetadata().getClassName());
                 return hasRequiredConstructor(clazz);
             } catch (ClassNotFoundException ex) {
-                LOG.warn(
+                log.warn(
                         "Failed to load API client class {}",
                         metadataReader.getClassMetadata().getClassName(),
                         ex
@@ -91,9 +109,15 @@ public class DuiServiceApiRegistrar
             }
         });
         scanner.setResourceLoader(resourceLoader);
-        return scanner.findCandidateComponents(API_BASE_PACKAGE);
+        return scanner.findCandidateComponents(environment.getRequiredProperty("OPENAPI_API_PACKAGE"));
     }
 
+    /**
+     * Проверяет наличие конструктора с единственным параметром {@link ApiClient}.
+     *
+     * @param clazz проверяемый класс
+     * @return {@code true}, если подходящий конструктор найден
+     */
     private static boolean hasRequiredConstructor(Class<?> clazz) {
         return Arrays.stream(clazz.getConstructors())
                 .anyMatch(constructor ->
@@ -102,6 +126,12 @@ public class DuiServiceApiRegistrar
                 );
     }
 
+    /**
+     * Преобразует первую букву строки в нижний регистр.
+     *
+     * @param value исходная строка
+     * @return строка с первой буквой в нижнем регистре
+     */
     private static String lowerFirst(String value) {
         if (value == null || value.isEmpty()) {
             return value;
@@ -109,11 +139,21 @@ public class DuiServiceApiRegistrar
         return Character.toLowerCase(value.charAt(0)) + value.substring(1);
     }
 
+    /**
+     * Устанавливает загрузчик ресурсов.
+     *
+     * @param resourceLoader загрузчик ресурсов Spring
+     */
     @Override
     public void setResourceLoader(ResourceLoader resourceLoader) {
         this.resourceLoader = resourceLoader;
     }
 
+    /**
+     * Устанавливает окружение со свойствами приложения.
+     *
+     * @param environment Spring-окружение
+     */
     @Override
     public void setEnvironment(Environment environment) {
         this.environment = environment;

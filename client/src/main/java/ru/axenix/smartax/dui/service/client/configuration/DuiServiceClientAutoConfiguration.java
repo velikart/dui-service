@@ -12,15 +12,24 @@ import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.netty.http.client.HttpClient;
 
-// ВАЖНО: пакет ДОЛЖЕН совпадать с invokerPackage из build.gradle
 import ru.axenix.smartax.dui.service.client.invoker.ApiClient;
 
+/**
+ * Автоконфигурация сгенерированного клиента DUI Service.
+ */
 @AutoConfiguration
 @ConditionalOnClass(ApiClient.class)
 @EnableConfigurationProperties(DuiServiceClientProperties.class)
 @Import(DuiServiceApiRegistrar.class)
 public class DuiServiceClientAutoConfiguration {
 
+    /**
+     * Создает и настраивает {@link ApiClient} для вызовов DUI Service.
+     *
+     * @param props свойства клиента DUI Service
+     * @param webClientBuilder билдер Spring {@link WebClient}
+     * @return настроенный экземпляр {@link ApiClient}
+     */
     @Bean
     public ApiClient duiApiClient(DuiServiceClientProperties props, WebClient.Builder webClientBuilder) {
 

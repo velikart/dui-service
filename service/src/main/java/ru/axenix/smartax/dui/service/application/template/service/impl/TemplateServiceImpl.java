@@ -17,8 +17,6 @@ import java.util.UUID;
 /**
  * Сервис управления шаблонами.
  * TODO Переделать на хранение шаблонов в бд и разработкать апи создания и управления шаблонами.
- *
- * @author Velikanov Artyom.
  */
 @Service
 @RequiredArgsConstructor

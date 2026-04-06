@@ -16,8 +16,6 @@ import java.util.UUID;
 /**
  * Mapper для преобразования между доменной сущностью {@link CollectionEntity}
  * и моделями передачи данных {@link CollectionDto} и {@link CollectionShortDto}.
- *
- * @author Artem Velikanov.
  */
 @Mapper(
         componentModel = "spring",

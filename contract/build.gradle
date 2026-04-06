@@ -5,15 +5,8 @@ plugins {
 dependencies {
     implementation platform(external.spring.boot.bom)
     api external.spring.boot.starter.web
-    implementation "org.openapitools:openapi-generator-gradle-plugin:7.5.0"
-    implementation "org.openapitools:jackson-databind-nullable:0.2.7"
 
     annotationProcessor external.lombok
 
     compileOnly external.lombok
-    compileOnly "org.springframework.boot:spring-boot-starter-validation"
-    compileOnly "javax.annotation:javax.annotation-api:1.3.2"
-    compileOnly "com.google.code.findbugs:jsr305:3.0.2"
-    compileOnly "io.swagger.core.v3:swagger-annotations:2.2.22"
-
 }

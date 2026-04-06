@@ -9,8 +9,6 @@ import java.util.UUID;
 
 /**
  * Репозиторий взаимодействия с БД таблицы <strong>collection</strong>
- *
- * @author Velikanov Artyom.
  */
 @Repository
 public interface CollectionRepository extends JpaRepository<CollectionEntity, UUID> {

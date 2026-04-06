@@ -10,8 +10,6 @@ import java.util.UUID;
 
 /**
  * Интерфейс сервиса управления шаблонами.
- *
- * @author Velikanov Artyom.
  */
 public interface TemplateService {
 

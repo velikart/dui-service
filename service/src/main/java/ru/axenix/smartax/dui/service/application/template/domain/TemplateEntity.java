@@ -18,8 +18,6 @@ import ru.axenix.smartax.dui.service.contract.model.TemplateFilterDto;
 
 /**
  * Доменная модель <strong>Шаблон</strong>.
- *
- * @author Velikanov Artyom.
  */
 @Getter
 @Setter
