@@ -5,9 +5,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.axenix.smartax.dui.service.application.page.domain.PageRepository;
 import ru.axenix.smartax.dui.service.application.page.mapper.PageMapper;
+import ru.axenix.smartax.dui.service.application.page.model.PageShortDto;
 import ru.axenix.smartax.dui.service.application.page.service.PageService;
 import ru.axenix.smartax.dui.service.contract.model.PageDto;
 
+import java.util.List;
 import java.util.UUID;
 
 import static ru.axenix.smartax.dui.service.error.ErrorDescription.PAGE_NOT_FOUND;
@@ -36,5 +38,13 @@ public class PageServiceImpl implements PageService {
         return pageRepository.findByNameEqualsIgnoreCase(name)
                 .map(pageMapper::toDto)
                 .orElseThrow(PAGE_NOT_FOUND::exception);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<PageShortDto> listPages() {
+        return pageRepository.findAllByOrderByNameAsc().stream()
+                .map(page -> new PageShortDto(page.getId(), page.getName(), page.getTitle()))
+                .toList();
     }
 }

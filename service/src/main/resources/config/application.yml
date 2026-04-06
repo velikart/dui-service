@@ -44,13 +44,6 @@ spring:
           MCP server for dui-service collections (manifest JSON).
           Supports reading, creating and updating collections via existing CollectionService.
 
-# Совпадай с USERNAME/PASSWORD в mcp.json (Cursor шлёт HTTP Basic на /sse и /mcp/**).
-dui:
-  mcp:
-    http-auth:
-      username: ${MCP_USERNAME:}
-      password: ${MCP_PASSWORD:}
-
 application:
   kafka:
     bootstrapServers: ${KAFKA_SERVERS}
@@ -88,4 +81,3 @@ logging:
   connection:
     host: ${LOG_HOST:localhost}
     port: ${LOG_PORT:24224}
-
