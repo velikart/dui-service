@@ -1,0 +1,10 @@
+plugins {
+    id 'ru.axenix.smartax.plugin.library-configurator-plugin' version "${CONFIGURATOR_PLUGIN_VERSION}"
+}
+
+dependencies {
+    implementation platform(external.spring.boot.bom)
+    api 'org.springframework.ai:spring-ai-starter-mcp-server-webmvc:1.0.3'
+
+    testImplementation external.spring.boot.starter.test
+}
