@@ -1,6 +1,6 @@
-package ru.axenix.smartax.dui.service.mcp.tool;
+package ru.axenix.smartax.mcp.starter.annotation;
 
-import ru.axenix.smartax.mcp.starter.annotation.SmartaxMcpTool;
+import org.springframework.stereotype.Component;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -11,6 +11,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@SmartaxMcpTool
-public @interface DuiMcpTool {
+@Component
+public @interface SmartaxMcpTool {
 }
