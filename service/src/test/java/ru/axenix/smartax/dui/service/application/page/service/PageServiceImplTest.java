@@ -4,10 +4,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -15,9 +15,9 @@ import org.mockito.MockitoAnnotations;
 import ru.axenix.smartax.dui.service.application.page.domain.PageEntity;
 import ru.axenix.smartax.dui.service.application.page.domain.PageRepository;
 import ru.axenix.smartax.dui.service.application.page.mapper.PageMapper;
-import ru.axenix.smartax.dui.service.application.page.model.PageShortDto;
 import ru.axenix.smartax.dui.service.application.page.service.impl.PageServiceImpl;
 import ru.axenix.smartax.dui.service.contract.model.PageDto;
+import ru.axenix.smartax.dui.service.contract.model.PageShortDto;
 import ru.axenix.smartax.dui.service.error.ApplicationException;
 
 import java.time.LocalDateTime;
@@ -36,7 +36,7 @@ class PageServiceImplTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        PageMapper pageMapper = new PageMapper(new ObjectMapper());
+        PageMapper pageMapper = new PageMapper();
         pageService = new PageServiceImpl(pageRepository, pageMapper);
     }
 
@@ -47,7 +47,8 @@ class PageServiceImplTest {
         PageEntity pageEntity = new PageEntity();
         pageEntity.setId(pageId);
         pageEntity.setTitle("Test Title");
-        pageEntity.setInstructions("{\"key\":\"value\"}");
+        pageEntity.setPages(List.of(Map.of("key", "value")));
+        pageEntity.setMocks(List.of(Map.of("mock", "m1")));
         pageEntity.setAuthor("Test Author");
         pageEntity.setUpdateDateTime(LocalDateTime.now());
 
@@ -58,8 +59,8 @@ class PageServiceImplTest {
         assertNotNull(pageDto);
         assertEquals(pageId, pageDto.getId());
         assertEquals("Test Title", pageDto.getTitle());
-        assertNotNull(pageDto.getInstructions());
-        assertEquals("value", ((Map<?, ?>) pageDto.getInstructions()).get("key"));
+        assertNotNull(pageDto.getPages());
+        assertEquals("value", pageDto.getPages().get(0).get("key"));
         assertEquals("Test Author", pageDto.getAuthor());
         assertNotNull(pageDto.getUpdateDateTime());
     }
@@ -80,7 +81,7 @@ class PageServiceImplTest {
         PageEntity pageEntity = new PageEntity();
         pageEntity.setId(UUID.randomUUID());
         pageEntity.setTitle("Test Title");
-        pageEntity.setInstructions("{\"key\":\"value\"}");
+        pageEntity.setPages(List.of(Map.of("key", "value")));
         pageEntity.setAuthor("Test Author");
         pageEntity.setUpdateDateTime(LocalDateTime.now());
 
@@ -90,8 +91,8 @@ class PageServiceImplTest {
 
         assertNotNull(pageDto);
         assertEquals("Test Title", pageDto.getTitle());
-        assertNotNull(pageDto.getInstructions());
-        assertEquals("value", ((Map<?, ?>) pageDto.getInstructions()).get("key"));
+        assertNotNull(pageDto.getPages());
+        assertEquals("value", pageDto.getPages().get(0).get("key"));
         assertEquals("Test Author", pageDto.getAuthor());
         assertNotNull(pageDto.getUpdateDateTime());
     }
@@ -118,9 +119,7 @@ class PageServiceImplTest {
 
         assertNotNull(pages);
         assertEquals(1, pages.size());
-        assertEquals(pageId, pages.get(0).id());
-        assertEquals("dashboard", pages.get(0).name());
-        assertEquals("Dashboard", pages.get(0).title());
+        assertEquals(new PageShortDto(pageId, "dashboard", "Dashboard"), pages.get(0));
         verify(pageRepository).findAllByOrderByNameAsc();
     }
 
@@ -133,5 +132,67 @@ class PageServiceImplTest {
         assertNotNull(pages);
         assertTrue(pages.isEmpty());
         verify(pageRepository).findAllByOrderByNameAsc();
+    }
+
+    @Test
+    void testCreatePage() {
+        PageDto request = new PageDto();
+        request.setName("new-page");
+        request.setTitle("New page");
+        request.setPages(List.of(Map.of("p", "1")));
+        request.setMocks(List.of(Map.of("m", "1")));
+        request.setAuthor("author");
+
+        PageEntity savedEntity = new PageEntity();
+        savedEntity.setId(UUID.randomUUID());
+        savedEntity.setName("new-page");
+        savedEntity.setTitle("New page");
+        savedEntity.setPages(List.of(Map.of("p", "1")));
+        savedEntity.setMocks(List.of(Map.of("m", "1")));
+        savedEntity.setAuthor("author");
+
+        when(pageRepository.save(any(PageEntity.class))).thenReturn(savedEntity);
+
+        PageDto result = pageService.createPage(request);
+
+        assertNotNull(result.getId());
+        assertEquals("new-page", result.getName());
+        assertEquals("New page", result.getTitle());
+        assertEquals("1", result.getPages().get(0).get("p"));
+        assertEquals("1", result.getMocks().get(0).get("m"));
+        verify(pageRepository).save(any(PageEntity.class));
+    }
+
+    @Test
+    void testEditPage() {
+        UUID pageId = UUID.randomUUID();
+
+        PageEntity existingEntity = new PageEntity();
+        existingEntity.setId(pageId);
+        existingEntity.setName("old-page");
+        existingEntity.setTitle("Old page");
+        existingEntity.setPages(List.of(Map.of("p", "old")));
+        existingEntity.setMocks(List.of(Map.of("m", "old")));
+        existingEntity.setAuthor("author");
+
+        PageDto request = new PageDto();
+        request.setName("edited-page");
+        request.setTitle("Edited page");
+        request.setPages(List.of(Map.of("p", "new")));
+        request.setMocks(List.of(Map.of("m", "new")));
+        request.setAuthor("new-author");
+
+        when(pageRepository.findById(pageId)).thenReturn(Optional.of(existingEntity));
+        when(pageRepository.save(existingEntity)).thenReturn(existingEntity);
+
+        PageDto result = pageService.editPage(pageId, request);
+
+        assertEquals("edited-page", result.getName());
+        assertEquals("Edited page", result.getTitle());
+        assertEquals("new", result.getPages().get(0).get("p"));
+        assertEquals("new", result.getMocks().get(0).get("m"));
+        assertEquals("new-author", result.getAuthor());
+        verify(pageRepository).findById(pageId);
+        verify(pageRepository).save(existingEntity);
     }
 }

@@ -1,9 +1,10 @@
-package ru.axenix.smartax.dui.service.mcp.tool;
+package ru.axenix.smartax.dui.service.mcp;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import ru.axenix.smartax.common.exception.SmartaxException;
 import ru.axenix.smartax.dui.service.application.collection.service.CollectionService;
 import ru.axenix.smartax.dui.service.contract.model.CollectionShortDto;
 
@@ -35,6 +36,6 @@ class CollectionMcpToolTest {
     void listCollections_ThrowsWhenUserIdNotProvided() {
         CollectionMcpTool tools = new CollectionMcpTool(collectionService);
 
-        assertThrows(IllegalArgumentException.class, () -> tools.listCollections("  "));
+        assertThrows(SmartaxException.class, () -> tools.listCollections("  "));
     }
 }

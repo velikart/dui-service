@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -25,7 +27,15 @@ class PageRepositoryTest {
     void testFindByNameEqualsIgnoreCase() {
         String pageName = "TestPage";
         UUID uuid = UUID.randomUUID();
-        PageEntity expectedPage = new PageEntity(uuid, pageName, "title", "{}", "test", LocalDateTime.now());
+        PageEntity expectedPage = new PageEntity(
+            uuid,
+            pageName,
+            "title",
+            List.of(Map.of("page", "one")),
+            List.of(Map.of("mock", "one")),
+            "test",
+            LocalDateTime.now()
+        );
         when(pageRepository.findByNameEqualsIgnoreCase(pageName)).thenReturn(Optional.of(expectedPage));
         Optional<PageEntity> result = pageRepository.findByNameEqualsIgnoreCase(pageName);
         assertEquals(Optional.of(expectedPage), result);

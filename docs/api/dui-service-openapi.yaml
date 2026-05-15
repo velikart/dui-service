@@ -65,7 +65,7 @@ paths:
                 error:
                   code: "500"
                   message: Внутренняя ошибка сервиса
-                  description: Adapter not responding
+                  description: Service not responding
                 meta:
                   actualDateTime: "2017-08-14T12:17:47.720"
       security:
@@ -120,7 +120,7 @@ paths:
                 error:
                   code: "500"
                   message: Внутренняя ошибка сервиса
-                  description: Adapter not responding
+                  description: Service not responding
                 meta:
                   actualDateTime: "2017-08-14T12:17:47.720"
       security:
@@ -169,7 +169,7 @@ paths:
                 error:
                   code: "500"
                   message: Внутренняя ошибка сервиса
-                  description: Adapter not responding
+                  description: Service not responding
                 meta:
                   actualDateTime: "2017-08-14T12:17:47.720"
       security:
@@ -223,7 +223,7 @@ paths:
                 error:
                   code: "500"
                   message: Внутренняя ошибка сервиса
-                  description: Adapter not responding
+                  description: Service not responding
                 meta:
                   actualDateTime: "2017-08-14T12:17:47.720"
       security:
@@ -282,7 +282,7 @@ paths:
                 error:
                   code: "500"
                   message: Внутренняя ошибка сервиса
-                  description: Adapter not responding
+                  description: Service not responding
                 meta:
                   actualDateTime: "2017-08-14T12:17:47.720"
       security:
@@ -331,7 +331,7 @@ paths:
                 error:
                   code: "500"
                   message: Внутренняя ошибка сервиса
-                  description: Adapter not responding
+                  description: Service not responding
                 meta:
                   actualDateTime: "2017-08-14T12:17:47.720"
       security:
@@ -385,7 +385,7 @@ paths:
                 error:
                   code: "500"
                   message: Внутренняя ошибка сервиса
-                  description: Adapter not responding
+                  description: Service not responding
                 meta:
                   actualDateTime: "2017-08-14T12:17:47.720"
       security:
@@ -434,7 +434,7 @@ paths:
                 error:
                   code: "500"
                   message: Внутренняя ошибка сервиса
-                  description: Adapter not responding
+                  description: Service not responding
                 meta:
                   actualDateTime: "2017-08-14T12:17:47.720"
       security:
@@ -488,7 +488,7 @@ paths:
                 error:
                   code: "500"
                   message: Внутренняя ошибка сервиса
-                  description: Adapter not responding
+                  description: Service not responding
                 meta:
                   actualDateTime: "2017-08-14T12:17:47.720"
       security:
@@ -535,7 +535,7 @@ paths:
                 error:
                   code: "500"
                   message: Внутренняя ошибка сервиса
-                  description: Adapter not responding
+                  description: Service not responding
                 meta:
                   actualDateTime: "2017-08-14T12:17:47.720"
       security:
@@ -588,7 +588,7 @@ paths:
                 error:
                   code: "500"
                   message: Внутренняя ошибка сервиса
-                  description: Adapter not responding
+                  description: Service not responding
                 meta:
                   actualDateTime: "2017-08-14T12:17:47.720"
       security:
@@ -644,7 +644,7 @@ paths:
                 error:
                   code: "500"
                   message: Внутренняя ошибка сервиса
-                  description: Adapter not responding
+                  description: Service not responding
                 meta:
                   actualDateTime: "2017-08-14T12:17:47.720"
       security:
@@ -693,7 +693,7 @@ paths:
                 error:
                   code: "500"
                   message: Внутренняя ошибка сервиса
-                  description: Adapter not responding
+                  description: Service not responding
                 meta:
                   actualDateTime: "2017-08-14T12:17:47.720"
       security:
@@ -748,7 +748,7 @@ paths:
                 error:
                   code: "500"
                   message: Внутренняя ошибка сервиса
-                  description: Adapter not responding
+                  description: Service not responding
                 meta:
                   actualDateTime: "2017-08-14T12:17:47.720"
       security:
@@ -803,7 +803,7 @@ paths:
                 error:
                   code: "500"
                   message: Внутренняя ошибка сервиса
-                  description: Adapter not responding
+                  description: Service not responding
                 meta:
                   actualDateTime: "2017-08-14T12:17:47.720"
       security:
@@ -858,7 +858,7 @@ paths:
                 error:
                   code: "500"
                   message: Внутренняя ошибка сервиса
-                  description: Adapter not responding
+                  description: Service not responding
                 meta:
                   actualDateTime: "2017-08-14T12:17:47.720"
       security:
@@ -911,37 +911,34 @@ paths:
                 error:
                   code: "500"
                   message: Внутренняя ошибка сервиса
-                  description: Adapter not responding
+                  description: Service not responding
                 meta:
                   actualDateTime: "2017-08-14T12:17:47.720"
       security:
         - Authorization: []
-
-  /app/v1/page/instructions:
-    get:
+    post:
       tags:
         - Pages
-      summary: Получение json инструкции
-      description: Получение json-инструкции страницы по маршруту страницы
-      operationId: getPageInstructions
-      parameters:
-        - name: pageName
-          in: query
-          required: true
-          schema:
-            type: string
+      summary: Создание страницы
+      description: Создание новой страницы
+      operationId: createPage
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              $ref: "#/components/schemas/PageDto"
       responses:
         "200":
           description: Запрос успешно выполнен
           content:
-            application/json:
+            "application/json":
               schema:
-                type: object
-                additionalProperties: true
+                $ref: "#/components/schemas/PageDto"
         "400":
           description: Ошибка в запросе
           content:
-            application/json:
+            "application/json":
               schema:
                 $ref: "#/components/schemas/RestResponse"
               example:
@@ -957,7 +954,7 @@ paths:
         "500":
           description: Внутренняя ошибка приложения
           content:
-            application/json:
+            "application/json":
               schema:
                 $ref: "#/components/schemas/RestResponse"
               example:
@@ -965,7 +962,168 @@ paths:
                 error:
                   code: "500"
                   message: Внутренняя ошибка сервиса
-                  description: Adapter not responding
+                  description: Service not responding
+                meta:
+                  actualDateTime: "2017-08-14T12:17:47.720"
+      security:
+        - Authorization: []
+
+  /app/v1/page/{pageUUID}:
+    get:
+      tags:
+        - Pages
+      summary: Получение страницы по идентификатору
+      description: Получение объекта страницы по идентификатору UUID
+      operationId: getPage
+      parameters:
+        - name: pageUUID
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Запрос успешно выполнен
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/PageDto"
+        "400":
+          description: Ошибка в запросе
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/RestResponse"
+              example:
+                status: error
+                error:
+                  code: "400"
+                  message: Ошибка в запросе
+                meta:
+                  actualDateTime: "2017-08-14T12:17:47.720"
+                  fieldErrors:
+                    - field: string
+                      message: must not be blank
+        "500":
+          description: Внутренняя ошибка приложения
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/RestResponse"
+              example:
+                status: error
+                error:
+                  code: "500"
+                  message: Внутренняя ошибка сервиса
+                  description: Service not responding
+                meta:
+                  actualDateTime: "2017-08-14T12:17:47.720"
+      security:
+        - Authorization: []
+    put:
+      tags:
+        - Pages
+      summary: Перезапись страницы
+      description: Обновление существующей страницы по UUID
+      operationId: editPage
+      parameters:
+        - name: pageUUID
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              $ref: "#/components/schemas/PageDto"
+      responses:
+        "200":
+          description: Запрос успешно выполнен
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/PageDto"
+        "400":
+          description: Ошибка в запросе
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/RestResponse"
+              example:
+                status: error
+                error:
+                  code: "400"
+                  message: Ошибка в запросе
+                meta:
+                  actualDateTime: "2017-08-14T12:17:47.720"
+                  fieldErrors:
+                    - field: string
+                      message: must not be blank
+        "500":
+          description: Внутренняя ошибка приложения
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/RestResponse"
+              example:
+                status: error
+                error:
+                  code: "500"
+                  message: Внутренняя ошибка сервиса
+                  description: Service not responding
+                meta:
+                  actualDateTime: "2017-08-14T12:17:47.720"
+      security:
+        - Authorization: []
+
+  /app/v1/page/list:
+    post:
+      tags:
+        - Pages
+      summary: Получение списка страниц
+      description: Получение списка страниц в упрощенном формате
+      operationId: getAllPages
+      responses:
+        "200":
+          description: Запрос успешно выполнен
+          content:
+            "application/json":
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PageShortDto"
+        "400":
+          description: Ошибка в запросе
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/RestResponse"
+              example:
+                status: error
+                error:
+                  code: "400"
+                  message: Ошибка в запросе
+                meta:
+                  actualDateTime: "2017-08-14T12:17:47.720"
+                  fieldErrors:
+                    - field: string
+                      message: must not be blank
+        "500":
+          description: Внутренняя ошибка приложения
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/RestResponse"
+              example:
+                status: error
+                error:
+                  code: "500"
+                  message: Внутренняя ошибка сервиса
+                  description: Service not responding
                 meta:
                   actualDateTime: "2017-08-14T12:17:47.720"
       security:
@@ -1025,7 +1183,7 @@ paths:
                 error:
                   code: "500"
                   message: Внутренняя ошибка сервиса
-                  description: Adapter not responding
+                  description: Service not responding
                 meta:
                   actualDateTime: "2017-08-14T12:17:47.720"
       security:
@@ -1080,7 +1238,7 @@ paths:
                 error:
                   code: "500"
                   message: Внутренняя ошибка сервиса
-                  description: Adapter not responding
+                  description: Service not responding
                 meta:
                   actualDateTime: "2017-08-14T12:17:47.720"
       security:
@@ -1285,6 +1443,25 @@ components:
         - title
         - uuid
 
+    PageShortDto:
+      type: object
+      description: Упрощенная модель страницы для списка
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Идентификатор страницы
+        name:
+          type: string
+          description: Название страницы по которому она доступна
+        title:
+          type: string
+          description: Наименование старницы
+      required:
+        - id
+        - name
+        - title
+
     PageDto:
       type: object
       description: Модель страницы для микрофронта
@@ -1299,10 +1476,18 @@ components:
         name:
           type: string
           description: Название страницы по которому она доступна
-        instructions:
-          type: object
-          additionalProperties: true
-          description: Объект json страницы
+        pages:
+          type: array
+          description: Объект json со списком инструкций страниц
+          items:
+            type: object
+            additionalProperties: true
+        mocks:
+          type: array
+          description: Объект json со списком моков запросов
+          items:
+            type: object
+            additionalProperties: true
         updateDateTime:
           type: string
           format: date-time
@@ -1310,6 +1495,9 @@ components:
         author:
           type: string
           description: Создатель записи
+      required:
+        - mocks
+        - pages
 
     RestResponseError:
       type: object

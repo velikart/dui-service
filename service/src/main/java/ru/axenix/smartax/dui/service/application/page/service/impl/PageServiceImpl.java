@@ -5,9 +5,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.axenix.smartax.dui.service.application.page.domain.PageRepository;
 import ru.axenix.smartax.dui.service.application.page.mapper.PageMapper;
-import ru.axenix.smartax.dui.service.application.page.model.PageShortDto;
 import ru.axenix.smartax.dui.service.application.page.service.PageService;
 import ru.axenix.smartax.dui.service.contract.model.PageDto;
+import ru.axenix.smartax.dui.service.contract.model.PageShortDto;
 
 import java.util.List;
 import java.util.UUID;
@@ -46,5 +46,24 @@ public class PageServiceImpl implements PageService {
         return pageRepository.findAllByOrderByNameAsc().stream()
                 .map(page -> new PageShortDto(page.getId(), page.getName(), page.getTitle()))
                 .toList();
+    }
+
+    @Override
+    @Transactional
+    public PageDto createPage(PageDto page) {
+        UUID pageId = UUID.randomUUID();
+        var entity = pageMapper.toEntity(page, pageId);
+        return pageMapper.toDto(pageRepository.save(entity));
+    }
+
+    @Override
+    @Transactional
+    public PageDto editPage(UUID pageId, PageDto page) {
+        var entity = pageRepository.findById(pageId)
+            .orElseThrow(PAGE_NOT_FOUND::exception);
+
+        pageMapper.merge(entity, page);
+
+        return pageMapper.toDto(pageRepository.save(entity));
     }
 }

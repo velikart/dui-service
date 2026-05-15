@@ -11,4 +11,5 @@
     <include file="20251022234633_table_pages.xml" relativeToChangelogFile="true"/>
     <include file="20251114130745_collection_config.xml" relativeToChangelogFile="true"/>
     <include file="20251115124010_collection_config_default.xml" relativeToChangelogFile="true"/>
+    <include file="20260408110000_page_pages_mocks.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>

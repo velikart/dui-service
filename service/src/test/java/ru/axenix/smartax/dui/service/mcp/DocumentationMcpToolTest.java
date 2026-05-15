@@ -1,4 +1,4 @@
-package ru.axenix.smartax.dui.service.mcp.tool;
+package ru.axenix.smartax.dui.service.mcp;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -10,6 +10,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class DocumentationMcpToolTest {
 
@@ -63,4 +64,33 @@ class DocumentationMcpToolTest {
 
         assertThrows(IllegalArgumentException.class, () -> tools.getDocumentationFile("  "));
     }
+
+    @Test
+    void listDocumentationFiles_FallbackToClasspathWhenFileSystemMissing() {
+        DocumentationMcpTool tools = new DocumentationMcpTool();
+        ReflectionTestUtils.setField(tools, "documentationPath", "mcp-tools");
+
+        List<String> files = tools.listDocumentationFiles();
+
+        assertTrue(files.contains("listCollections.md"));
+    }
+
+    @Test
+    void getDocumentationFile_FallbackToClasspathWhenFileSystemMissing() {
+        DocumentationMcpTool tools = new DocumentationMcpTool();
+        ReflectionTestUtils.setField(tools, "documentationPath", "mcp-tools");
+
+        String content = tools.getDocumentationFile("listCollections.md");
+
+        assertTrue(content.contains("listCollections"));
+    }
+
+    @Test
+    void getDocumentationFile_ThrowsWhenFileNotFoundInAnySource() {
+        DocumentationMcpTool tools = new DocumentationMcpTool();
+        ReflectionTestUtils.setField(tools, "documentationPath", tempDir.resolve("missing").toString());
+
+        assertThrows(IllegalArgumentException.class, () -> tools.getDocumentationFile("absent.md"));
+    }
+
 }
