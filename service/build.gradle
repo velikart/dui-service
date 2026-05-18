@@ -13,7 +13,6 @@ dependencies {
     implementation internal.logging.common.lib
     implementation internal.service.web
     implementation internal.util
-    implementation internal.mcp.lib
 
     implementation external.liquibase.core
     implementation external.mapstruct
@@ -41,7 +40,7 @@ dependencies {
 
 tasks.named('processResources') {
     from("$rootDir/docs") {
-        include '**'
+        include 'template/**'
     }
 }
 

@@ -1,8 +1,9 @@
-package ru.axenix.smartax.dui.service.mcp;
+package ru.axenix.smartax.dui.service.mcp.tool;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.springframework.test.util.ReflectionTestUtils;
+import ru.axenix.smartax.common.exception.SmartaxException;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -10,7 +11,6 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class DocumentationMcpToolTest {
 
@@ -35,7 +35,7 @@ class DocumentationMcpToolTest {
         DocumentationMcpTool tools = new DocumentationMcpTool();
         ReflectionTestUtils.setField(tools, "documentationPath", tempDir.resolve("missing").toString());
 
-        assertThrows(IllegalStateException.class, tools::listDocumentationFiles);
+        assertThrows(SmartaxException.class, tools::listDocumentationFiles);
     }
 
     @Test
@@ -54,7 +54,7 @@ class DocumentationMcpToolTest {
         DocumentationMcpTool tools = new DocumentationMcpTool();
         ReflectionTestUtils.setField(tools, "documentationPath", tempDir.toString());
 
-        assertThrows(IllegalArgumentException.class, () -> tools.getDocumentationFile("../secret.txt"));
+        assertThrows(SmartaxException.class, () -> tools.getDocumentationFile("../secret.txt"));
     }
 
     @Test
@@ -62,35 +62,6 @@ class DocumentationMcpToolTest {
         DocumentationMcpTool tools = new DocumentationMcpTool();
         ReflectionTestUtils.setField(tools, "documentationPath", tempDir.toString());
 
-        assertThrows(IllegalArgumentException.class, () -> tools.getDocumentationFile("  "));
+        assertThrows(SmartaxException.class, () -> tools.getDocumentationFile("  "));
     }
-
-    @Test
-    void listDocumentationFiles_FallbackToClasspathWhenFileSystemMissing() {
-        DocumentationMcpTool tools = new DocumentationMcpTool();
-        ReflectionTestUtils.setField(tools, "documentationPath", "mcp-tools");
-
-        List<String> files = tools.listDocumentationFiles();
-
-        assertTrue(files.contains("listCollections.md"));
-    }
-
-    @Test
-    void getDocumentationFile_FallbackToClasspathWhenFileSystemMissing() {
-        DocumentationMcpTool tools = new DocumentationMcpTool();
-        ReflectionTestUtils.setField(tools, "documentationPath", "mcp-tools");
-
-        String content = tools.getDocumentationFile("listCollections.md");
-
-        assertTrue(content.contains("listCollections"));
-    }
-
-    @Test
-    void getDocumentationFile_ThrowsWhenFileNotFoundInAnySource() {
-        DocumentationMcpTool tools = new DocumentationMcpTool();
-        ReflectionTestUtils.setField(tools, "documentationPath", tempDir.resolve("missing").toString());
-
-        assertThrows(IllegalArgumentException.class, () -> tools.getDocumentationFile("absent.md"));
-    }
-
 }

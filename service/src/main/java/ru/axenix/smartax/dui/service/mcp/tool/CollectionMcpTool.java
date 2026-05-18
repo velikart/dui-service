@@ -1,4 +1,4 @@
-package ru.axenix.smartax.dui.service.mcp;
+package ru.axenix.smartax.dui.service.mcp.tool;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.tool.annotation.Tool;
@@ -9,7 +9,6 @@ import ru.axenix.smartax.common.model.error.SmartaxError;
 import ru.axenix.smartax.dui.service.application.collection.service.CollectionService;
 import ru.axenix.smartax.dui.service.contract.model.CollectionDto;
 import ru.axenix.smartax.dui.service.contract.model.CollectionShortDto;
-import ru.axenix.smartax.lib.mcp.annotation.SmartaxMcpTool;
 
 import java.util.List;
 import java.util.UUID;
@@ -17,7 +16,7 @@ import java.util.UUID;
 /**
  * MCP-инструменты для работы с коллекциями DUI.
  */
-@SmartaxMcpTool
+@DuiMcpTool
 @RequiredArgsConstructor
 public class CollectionMcpTool {
 
@@ -29,7 +28,11 @@ public class CollectionMcpTool {
      * @param userId идентификатор пользователя
      * @return сокращенный список коллекций
      */
-    @Tool
+    @Tool(
+            name = "listCollections",
+            description = "List collections (uuid, title) for admin userId. If userId omitted, uses HTTP Basic login"
+                    + " (MCP USERNAME = same as in mcp.json / MCP_USERNAME env)."
+    )
     public List<CollectionShortDto> listCollections(
             @ToolParam(description = "Admin user id; omit to use MCP HTTP Basic user name", required = false)
             String userId
@@ -43,7 +46,7 @@ public class CollectionMcpTool {
      * @param collectionUUID UUID коллекции
      * @return манифест коллекции
      */
-    @Tool
+    @Tool(name = "getCollectionManifest", description = "Get collection manifest by collectionUUID")
     public CollectionDto getCollectionManifest(
             @ToolParam(description = "Collection UUID") UUID collectionUUID
     ) {
@@ -57,7 +60,7 @@ public class CollectionMcpTool {
      * @param collectionDto новый манифест коллекции
      * @return обновленный манифест
      */
-    @Tool
+    @Tool(name = "saveCollectionManifest", description = "Save updated collection manifest by collectionUUID")
     public CollectionDto saveCollectionManifest(
             @ToolParam(description = "Collection UUID") UUID collectionUUID,
             @ToolParam(description = "Collection manifest payload") CollectionDto collectionDto
@@ -72,7 +75,7 @@ public class CollectionMcpTool {
      * @param collectionDto манифест новой коллекции
      * @return созданная коллекция
      */
-    @Tool
+    @Tool(name = "createCollectionManifest", description = "Create collection manifest for provided userId")
     public CollectionDto createCollectionManifest(
             @ToolParam(description = "User identifier") String userId,
             @ToolParam(description = "Collection manifest payload") CollectionDto collectionDto

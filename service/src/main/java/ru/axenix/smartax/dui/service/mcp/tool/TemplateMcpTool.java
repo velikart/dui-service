@@ -1,4 +1,4 @@
-package ru.axenix.smartax.dui.service.mcp;
+package ru.axenix.smartax.dui.service.mcp.tool;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.tool.annotation.Tool;
@@ -10,7 +10,6 @@ import ru.axenix.smartax.common.model.error.SmartaxError;
 import ru.axenix.smartax.dui.service.application.template.service.TemplateService;
 import ru.axenix.smartax.dui.service.contract.model.TemplateDto;
 import ru.axenix.smartax.dui.service.contract.model.TemplateFilterDto;
-import ru.axenix.smartax.lib.mcp.annotation.SmartaxMcpTool;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -20,7 +19,7 @@ import java.util.UUID;
 /**
  * MCP-инструменты для работы с шаблонами DUI.
  */
-@SmartaxMcpTool
+@DuiMcpTool
 @RequiredArgsConstructor
 public class TemplateMcpTool {
 
@@ -32,7 +31,7 @@ public class TemplateMcpTool {
      * @param type тип шаблона (опционально)
      * @return список шаблонов
      */
-    @Tool
+    @Tool(name = "listTemplates", description = "List page templates. Optional type filter narrows the result")
     public List<TemplateDto> listTemplates(
             @ToolParam(description = "Template type filter. Optional", required = false) TemplateFilterDto.TypeEnum type
     ) {
@@ -50,7 +49,7 @@ public class TemplateMcpTool {
      * @param templateUUID UUID шаблона
      * @return JSON страницы шаблона
      */
-    @Tool
+    @Tool(name = "getTemplatePageJson", description = "Get template page JSON by template UUID")
     public String getTemplatePageJson(
             @ToolParam(description = "Template UUID") UUID templateUUID
     ) {
@@ -63,7 +62,7 @@ public class TemplateMcpTool {
      * @param templateUUID UUID шаблона
      * @return имя файла изображения
      */
-    @Tool
+    @Tool(name = "getTemplateImageName", description = "Get template image filename by template UUID")
     public String getTemplateImageName(
             @ToolParam(description = "Template UUID") UUID templateUUID
     ) {

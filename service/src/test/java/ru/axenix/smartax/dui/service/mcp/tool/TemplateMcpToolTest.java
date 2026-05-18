@@ -1,4 +1,4 @@
-package ru.axenix.smartax.dui.service.mcp;
+package ru.axenix.smartax.dui.service.mcp.tool;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
