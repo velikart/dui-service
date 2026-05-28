@@ -1,6 +1,7 @@
 package ru.axenix.smartax.dui.service.application.collection.web;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.core.io.Resource;
 import org.springframework.web.bind.annotation.RestController;
 import ru.axenix.smartax.common.security.Authorization;
@@ -10,6 +11,7 @@ import ru.axenix.smartax.dui.service.contract.api.CollectionsApi;
 import ru.axenix.smartax.dui.service.contract.model.CollectionDto;
 import ru.axenix.smartax.dui.service.contract.model.CollectionHistoryDto;
 import ru.axenix.smartax.dui.service.contract.model.CollectionShortDto;
+import ru.axenix.smartax.lib.mcp.annotation.SmartaxMcpTool;
 
 import java.util.List;
 import java.util.UUID;
@@ -17,12 +19,14 @@ import java.util.UUID;
 /**
  * Контроллер для управления коллекциями администратора.
  */
+@SmartaxMcpTool
 @RestController
 @RequiredArgsConstructor
 public class CollectionController implements CollectionsApi {
 
     private final CollectionService collectionService;
 
+    @Tool
     @Override
     @Authorization
     public List<CollectionShortDto> getAllCollections() {

@@ -1349,7 +1349,6 @@ components:
         - mocks
         - pages
         - title
-        - uuid
 
     TemplateFilterDto:
       type: object

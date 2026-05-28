@@ -5,20 +5,15 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.MockedStatic;
 import org.mockito.MockitoAnnotations;
-import ru.axenix.smartax.common.security.SecurityContext;
-import ru.axenix.smartax.common.security.UserInfo;
 import ru.axenix.smartax.dui.service.application.page.domain.PageEntity;
 import ru.axenix.smartax.dui.service.application.page.domain.PageRepository;
-import ru.axenix.smartax.dui.service.application.page.filter.PermissionFilter;
 import ru.axenix.smartax.dui.service.application.page.mapper.PageMapper;
 import ru.axenix.smartax.dui.service.application.page.service.impl.PageServiceImpl;
 import ru.axenix.smartax.dui.service.contract.model.PageDto;
@@ -29,7 +24,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 
 class PageServiceImplTest {
@@ -39,14 +33,11 @@ class PageServiceImplTest {
 
     private PageServiceImpl pageService;
 
-    @Mock
-    private PermissionFilter permissionFilter;
-
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
         PageMapper pageMapper = new PageMapper();
-        pageService = new PageServiceImpl(pageRepository, pageMapper, permissionFilter);
+        pageService = new PageServiceImpl(pageRepository, pageMapper);
     }
 
     @Test
@@ -62,21 +53,16 @@ class PageServiceImplTest {
         pageEntity.setUpdateDateTime(LocalDateTime.now());
 
         when(pageRepository.findById(pageId)).thenReturn(Optional.of(pageEntity));
-        when(permissionFilter.filter(pageEntity.getPages())).thenReturn(pageEntity.getPages());
-        UserInfo userInfo = new UserInfo();
-        userInfo.setRoles(Set.of("ROLE_USER"));
-        try (MockedStatic<SecurityContext> mockedContext = mockStatic(SecurityContext.class)) {
-            mockedContext.when(SecurityContext::getUserInfoOrEmpty).thenReturn(userInfo);
-            PageDto pageDto = pageService.getPage(pageId);
 
-            assertNotNull(pageDto);
-            assertEquals(pageId, pageDto.getId());
-            assertEquals("Test Title", pageDto.getTitle());
-            assertNotNull(pageDto.getPages());
-            assertEquals("value", pageDto.getPages().get(0).get("key"));
-            assertEquals("Test Author", pageDto.getAuthor());
-            assertNotNull(pageDto.getUpdateDateTime());
-        }
+        PageDto pageDto = pageService.getPage(pageId);
+
+        assertNotNull(pageDto);
+        assertEquals(pageId, pageDto.getId());
+        assertEquals("Test Title", pageDto.getTitle());
+        assertNotNull(pageDto.getPages());
+        assertEquals("value", pageDto.getPages().get(0).get("key"));
+        assertEquals("Test Author", pageDto.getAuthor());
+        assertNotNull(pageDto.getUpdateDateTime());
     }
 
     @Test
@@ -100,46 +86,15 @@ class PageServiceImplTest {
         pageEntity.setUpdateDateTime(LocalDateTime.now());
 
         when(pageRepository.findByNameEqualsIgnoreCase(pageName)).thenReturn(Optional.of(pageEntity));
-        when(permissionFilter.filter(pageEntity.getPages())).thenReturn(pageEntity.getPages());
-        UserInfo userInfo = new UserInfo();
-        userInfo.setRoles(Set.of("ROLE_USER"));
-        try (MockedStatic<SecurityContext> mockedContext = mockStatic(SecurityContext.class)) {
-            mockedContext.when(SecurityContext::getUserInfoOrEmpty).thenReturn(userInfo);
-            PageDto pageDto = pageService.getPageByName(pageName);
 
-            assertNotNull(pageDto);
-            assertEquals("Test Title", pageDto.getTitle());
-            assertNotNull(pageDto.getPages());
-            assertEquals("value", pageDto.getPages().get(0).get("key"));
-            assertEquals("Test Author", pageDto.getAuthor());
-            assertNotNull(pageDto.getUpdateDateTime());
-        }
-    }
+        PageDto pageDto = pageService.getPageByName(pageName);
 
-    @Test
-    void testGetPageByName_FiltersByPermission() {
-        final String pageName = "TestPage";
-        PageEntity pageEntity = new PageEntity();
-        pageEntity.setId(UUID.randomUUID());
-        pageEntity.setTitle("Test Title");
-        pageEntity.setPages(List.of(
-            Map.of("key", "public"),
-            Map.of("permission", List.of("PAGE_VIEW_SECURED"), "key", "secured")
-        ));
-
-        when(pageRepository.findByNameEqualsIgnoreCase(pageName)).thenReturn(Optional.of(pageEntity));
-        List<Map<String, Object>> filteredPages = List.of(Map.of("key", "public"));
-        when(permissionFilter.filter(pageEntity.getPages())).thenReturn(filteredPages);
-
-        UserInfo userInfo = new UserInfo();
-        userInfo.setRoles(Set.of("ROLE_USER"));
-        try (MockedStatic<SecurityContext> mockedContext = mockStatic(SecurityContext.class)) {
-            mockedContext.when(SecurityContext::getUserInfoOrEmpty).thenReturn(userInfo);
-            PageDto pageDto = pageService.getPageByName(pageName);
-
-            assertEquals(1, pageDto.getPages().size());
-            assertEquals("public", pageDto.getPages().get(0).get("key"));
-        }
+        assertNotNull(pageDto);
+        assertEquals("Test Title", pageDto.getTitle());
+        assertNotNull(pageDto.getPages());
+        assertEquals("value", pageDto.getPages().get(0).get("key"));
+        assertEquals("Test Author", pageDto.getAuthor());
+        assertNotNull(pageDto.getUpdateDateTime());
     }
 
     @Test

@@ -1,4 +1,4 @@
-package ru.axenix.smartax.dui.service.mcp.tool;
+package ru.axenix.smartax.dui.service.mcp;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.tool.annotation.Tool;
@@ -6,6 +6,7 @@ import org.springframework.ai.tool.annotation.ToolParam;
 import ru.axenix.smartax.dui.service.application.page.service.PageService;
 import ru.axenix.smartax.dui.service.contract.model.PageDto;
 import ru.axenix.smartax.dui.service.contract.model.PageShortDto;
+import ru.axenix.smartax.lib.mcp.annotation.SmartaxMcpTool;
 
 import java.util.List;
 import java.util.UUID;
@@ -13,7 +14,7 @@ import java.util.UUID;
 /**
  * MCP-инструменты для доступа к страницам DUI.
  */
-@DuiMcpTool
+@SmartaxMcpTool
 @RequiredArgsConstructor
 public class PageMcpTool {
 
@@ -24,7 +25,7 @@ public class PageMcpTool {
      *
      * @return список страниц с краткой информацией
      */
-    @Tool(name = "listPages", description = "List available pages: id, name, title")
+    @Tool
     public List<PageShortDto> listPages() {
         return pageService.listPages();
     }
@@ -35,7 +36,7 @@ public class PageMcpTool {
      * @param pageName техническое имя страницы
      * @return инструкции страницы в виде JSON-подобной структуры
      */
-    @Tool(name = "getPageManifest", description = "Get page manifest by page name")
+    @Tool
     public PageDto getPageManifest(
             @ToolParam(description = "Page name") String pageName
     ) {
@@ -49,7 +50,7 @@ public class PageMcpTool {
      * @param pageDto  контент манифеста страницы.
      * @return обновленный манифест страницы.
      */
-    @Tool(name = "savePageManifest", description = "Save updated page manifest by pageUUID")
+    @Tool
     public PageDto savePageManifest(
         @ToolParam(description = "Page UUID") UUID pageUUID,
         @ToolParam(description = "Page manifest payload") PageDto pageDto
@@ -63,7 +64,7 @@ public class PageMcpTool {
      * @param pageDto контент манифеста страницы.
      * @return созданный манифест страницы.
      */
-    @Tool(name = "createPageManifest", description = "Create page manifest")
+    @Tool
     public PageDto createPageManifest(
         @ToolParam(description = "Page manifest payload") PageDto pageDto
     ) {
